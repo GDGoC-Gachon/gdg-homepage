@@ -1,15 +1,17 @@
-package com.gdg.homepage.landing.application.domain;
+package com.gdg.homepage.landing.register.domain;
 
 import com.gdg.homepage.common.domain.BaseTimeEntity;
 import com.gdg.homepage.landing.member.domain.Member;
 import jakarta.persistence.*;
 
+
 @Entity
-public class Application extends BaseTimeEntity {
+public class Register extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -19,7 +21,7 @@ public class Application extends BaseTimeEntity {
     private JoinPeriod period;
 
     @Embedded
-    private ApplicationSnippet snippet;
+    private RegisterSnippet snippet;
 
     private boolean approved = false;
 

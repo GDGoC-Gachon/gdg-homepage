@@ -1,4 +1,4 @@
-package com.gdg.homepage.landing.application.domain;
+package com.gdg.homepage.landing.register.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

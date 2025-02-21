@@ -1,11 +1,13 @@
-package com.gdg.homepage.landing.application.domain;
+package com.gdg.homepage.landing.register.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
-public class ApplicationSnippet {
+public class RegisterSnippet {
 
     private String name;
     private String email;
