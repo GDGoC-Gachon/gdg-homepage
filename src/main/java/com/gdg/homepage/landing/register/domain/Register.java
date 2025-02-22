@@ -1,6 +1,7 @@
 package com.gdg.homepage.landing.register.domain;
 
 import com.gdg.homepage.common.domain.BaseTimeEntity;
+import com.gdg.homepage.landing.admin.domain.JoinPeriod;
 import com.gdg.homepage.landing.member.domain.Member;
 import jakarta.persistence.*;
 
