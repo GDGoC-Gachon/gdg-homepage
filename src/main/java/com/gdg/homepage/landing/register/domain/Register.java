@@ -21,6 +21,10 @@ public class Register extends BaseTimeEntity {
     @JoinColumn(name = "period_id")
     private JoinPeriod period;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role registeredRole;
+
     @Embedded
     private RegisterSnippet snippet;
 
