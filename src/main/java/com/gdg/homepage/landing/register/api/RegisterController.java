@@ -1,8 +1,7 @@
-package com.gdg.homepage.landing.register.controller;
+package com.gdg.homepage.landing.register.api;
 
 
 import com.gdg.homepage.landing.register.domain.Register;
-import com.gdg.homepage.landing.register.service.RegisterService;
 import com.gdg.homepage.landing.register.service.RegisterServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/registers")
 @RequiredArgsConstructor
-public class RegisterApi {
+public class RegisterController {
     private final RegisterServiceImpl registerServiceImpl;
 
     @PostMapping
