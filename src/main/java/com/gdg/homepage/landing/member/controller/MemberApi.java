@@ -29,6 +29,12 @@ public class MemberApi {
         return ApiResponse.ok(memberService.login(request));
     }
 
+    @PostMapping("/logout")
+    public ApiResponse<String> logout() {
+        memberService.logout();
+        return ApiResponse.ok("성공적으로 로그아웃 되었습니다.");
+    }
+
     @GetMapping("/myPage")
     public ApiResponse<MemberDetailResponse> myPage(@AuthenticationPrincipal CustomUserDetails memberDetails) {
 

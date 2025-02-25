@@ -21,6 +21,9 @@ public interface MemberService {
     // 로그인
     MemberLoginResponse login(MemberLoginRequest request);
 
+    // 로그아웃
+    void logout();
+
     // 내 정보 조회하기
     MemberDetailResponse loadMyMember(Long memberId);
 

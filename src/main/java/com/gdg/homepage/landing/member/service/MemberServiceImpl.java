@@ -73,6 +73,24 @@ public class MemberServiceImpl implements MemberService {
         return MemberLoginResponse.from(member.getEmail(), token);
     }
 
+    @Override
+    public void logout() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            Long userId = userDetails.getId(); // 현재 사용자 ID 가져오기
+
+            // 현재 인증된 사용자 정보 삭제
+            SecurityContextHolder.clearContext();
+
+            log.info("✅ 로그아웃 완료 - userId: {}", userId);
+        } else {
+            log.warn("⚠️ 로그아웃 실패: 인증 정보 없음");
+        }
+    }
+
+
 
     @Override
     public MemberDetailResponse loadMyMember(Long memberId) {

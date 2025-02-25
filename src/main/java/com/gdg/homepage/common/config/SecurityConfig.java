@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/api/v1/member/register", "/api/v1/member/login").permitAll()
-                        .requestMatchers("/api/v1/member/myPage").hasAnyAuthority(
+                        .requestMatchers("/api/v1/member/**").hasAnyAuthority(
                                 MemberRole.MEMBER.getRole(), MemberRole.NON_MEMBER.getRole(),
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
                         .requestMatchers("/api/v1/registers/").permitAll()
