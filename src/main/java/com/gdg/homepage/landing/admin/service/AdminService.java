@@ -1,7 +1,9 @@
 package com.gdg.homepage.landing.admin.service;
 
+import com.gdg.homepage.landing.admin.domain.JoinPeriod;
 import com.gdg.homepage.landing.admin.dto.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AdminService {
@@ -18,5 +20,6 @@ public interface AdminService {
     // 가입 조기 종료
     void terminateJoinPeriod(Long id);
 
+    JoinPeriod checkJoinPeriod(LocalDateTime now);
 
 }
