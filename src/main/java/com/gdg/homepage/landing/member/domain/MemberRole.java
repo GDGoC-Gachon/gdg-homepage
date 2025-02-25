@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MemberRole {
 
-    MEMBER("Member"),
-    TEAM_MEMBER("Team_Member"),
-    ORGANIZER("Organizer"),
-    NON_MEMBER("Non_Member");
+    MEMBER("ROLE_MEMBER"),
+    TEAM_MEMBER("ROLE_TEAM_MEMBER"),
+    ORGANIZER("ROLE_ORGANIZER"),
+    NON_MEMBER("ROLE_NON_MEMBER");
 
     private final String role;
 

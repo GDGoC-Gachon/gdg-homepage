@@ -34,8 +34,14 @@ public class JwtTokenProvider {
 
     @PostConstruct
     private void setSecretKey() {
+        if (key == null || key.length() < 32) {
+            throw new IllegalArgumentException("JWT 키가 너무 짧습니다. 최소 32바이트 이상이어야 합니다.");
+        }
         secretKey = Keys.hmacShaKeyFor(key.getBytes());
     }
+
+
+
 
     /// AccessToken 만들기
     public String generateAccessToken(Authentication authentication) {
@@ -53,69 +59,67 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + expireTime);
 
-        // 권한 리스트 추출
         List<String> authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)  // 권한을 String으로 변환
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
+
+        // roles를 단일 문자열로 저장
+        String roles = String.join(",", authorities);
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", authorities);
+        claims.put("roles", roles);
         claims.put("userId", customUserDetails.getId());
+
         return Jwts.builder()
-                .setSubject(authentication.getName())// 사용자 이름 (subject)
+                .setSubject(authentication.getName())
                 .setClaims(claims)
-                .setIssuedAt(now)                                // 발급 시간
-                .setExpiration(expiredDate)                      // 만료 시간
-                .signWith(secretKey, SignatureAlgorithm.HS512)   // 서명
+                .setIssuedAt(now)
+                .setExpiration(expiredDate)
+                .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
-        // 토큰 반환
     }
 
     ///
     public Authentication getAuthentication(String token) {
-        Claims claims = parseClaims(token);  // JWT 클레임 파싱
+        Claims claims = parseClaims(token);
+        String rolesStr = claims.get("roles", String.class);
+        List<String> roles = Arrays.asList(rolesStr.split(","));
 
-        // 권한 정보 가져오기
-        Object roles = claims.get("roles");  // JWT에서 roles 정보 가져오기
-        List<String> authoritiesList = new ArrayList<>();
-
-        if (roles instanceof List) {
-            // roles가 List 형식일 때
-            authoritiesList = (List<String>) roles;
-        } else if (roles instanceof String) {
-            // roles가 String 형식일 때 (콤마로 구분된 역할)
-            authoritiesList = Arrays.asList(((String) roles).split(","));
-        }
-
-        // 권한을 SimpleGrantedAuthority로 변환
-        Collection<? extends GrantedAuthority> authorities = authoritiesList.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))  // ROLE_ 접두사 추가
+        Collection<? extends GrantedAuthority> authorities = roles.stream()
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        // userId를 Long으로 안전하게 변환
         Long userId = claims.get("userId", Long.class);
 
-        // 해당 userId로 Member를 조회
         Member member = memberRepository.findById(userId)
-                .orElseThrow();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+                .orElseThrow(() -> new RuntimeException("유효하지 않은 사용자 ID: " + userId));
 
-        // UsernamePasswordAuthenticationToken 반환
+        CustomUserDetails userDetails = new CustomUserDetails(member);
         return new UsernamePasswordAuthenticationToken(userDetails, token, authorities);
     }
 
 
-    /// 토큰 검증
+
     public boolean validateToken(String token) {
         if (!StringUtils.hasText(token)) {
             return false;
         }
 
-        Claims claims = parseClaims(token);
-        return claims.getExpiration().after(new Date());
+        try {
+            Claims claims = parseClaims(token);
+            return claims.getExpiration().after(new Date());
+        } catch (ExpiredJwtException e) {
+            log.warn("⚠️ JWT 토큰 만료됨: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.warn("⚠️ 잘못된 JWT 형식: {}", e.getMessage());
+        } catch (Exception e) {
+            log.warn("⚠️ JWT 검증 실패: {}", e.getMessage());
+        }
+        return false;
     }
+
 
     /// 토큰 Parse 하기
     private Claims parseClaims(String token) {

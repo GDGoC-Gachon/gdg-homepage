@@ -1,15 +1,15 @@
 package com.gdg.homepage.landing.member.controller;
 
 import com.gdg.homepage.common.response.ApiResponse;
+import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
+import com.gdg.homepage.landing.member.dto.CustomUserDetails;
 import com.gdg.homepage.landing.member.dto.MemberLoginRequest;
 import com.gdg.homepage.landing.member.dto.MemberLoginResponse;
 import com.gdg.homepage.landing.member.dto.MemberRegisterWrapper;
 import com.gdg.homepage.landing.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/member")
@@ -25,8 +25,14 @@ public class MemberApi {
     }
 
     @PostMapping("/login")
-    public ApiResponse<MemberLoginResponse> login(@RequestBody MemberLoginRequest request){
+    public ApiResponse<MemberLoginResponse> login(@RequestBody MemberLoginRequest request) {
         return ApiResponse.ok(memberService.login(request));
+    }
+
+    @GetMapping("/myPage")
+    public ApiResponse<MemberDetailResponse> myPage(@AuthenticationPrincipal CustomUserDetails memberDetails) {
+
+        return ApiResponse.ok(memberService.loadMyMember(memberDetails.getId()));
     }
 
 }

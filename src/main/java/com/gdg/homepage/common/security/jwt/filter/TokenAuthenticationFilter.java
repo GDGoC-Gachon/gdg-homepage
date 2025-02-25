@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -24,17 +25,16 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        // Access Token 추출
         String accessToken = resolveToken(request);
 
-        // Access Token 검증 및 인증 설정
         if (accessToken != null && tokenProvider.validateToken(accessToken)) {
             setAuthentication(accessToken);
+        } else {
         }
 
-        // 다음 필터로 요청 전달
         filterChain.doFilter(request, response);
     }
+
 
     /**
      * SecurityContext에 인증 정보 설정
@@ -59,14 +59,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
      * @param request HTTP 요청
      * @return Bearer 토큰 문자열 (없으면 null)
      */
-    private String resolveToken(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
 
-        // Authorization 헤더 검증
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
-            return null; // 토큰이 없으면 null 반환
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
 
-        return authorization.substring(7); // "Bearer " 이후의 토큰 부분만 반환
+        return null;
     }
+
 }

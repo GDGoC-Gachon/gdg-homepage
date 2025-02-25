@@ -1,6 +1,6 @@
 package com.gdg.homepage.landing.member.service;
 
-import com.gdg.homepage.landing.member.domain.Member;
+import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.member.dto.MemberLoginRequest;
 import com.gdg.homepage.landing.member.dto.MemberLoginResponse;
 import com.gdg.homepage.landing.member.dto.MemberRegisterRequest;
@@ -22,7 +22,7 @@ public interface MemberService {
     MemberLoginResponse login(MemberLoginRequest request);
 
     // 내 정보 조회하기
-    Member loadMyMember(Long memberId);
+    MemberDetailResponse loadMyMember(Long memberId);
 
     // 비밀번호 변경요청하기
     void requestPasswordChange(Long memberId);
