@@ -3,6 +3,7 @@ package com.gdg.homepage.landing.admin.controller;
 import com.gdg.homepage.common.response.ApiResponse;
 import com.gdg.homepage.common.response.page.PageRequest;
 import com.gdg.homepage.common.response.page.PageResponse;
+import com.gdg.homepage.landing.admin.dto.MemberApproveRequest;
 import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.admin.dto.MemberListResponse;
 import com.gdg.homepage.landing.admin.dto.MemberUpgradeRequest;
@@ -35,6 +36,13 @@ public class MemberAdminApi {
     @GetMapping("/list/not")
     public ApiResponse<PageResponse<MemberListResponse>> getMemberListNotApproved(PageRequest pageRequest) {
         return ApiResponse.ok(adminService.findAllNotApproved(pageRequest));
+    }
+
+    // 멤버 승인하기
+    @PutMapping("/approve")
+    public ApiResponse<String> approveRole(@RequestBody @Valid MemberApproveRequest request){
+        adminService.approveMember(request);
+        return ApiResponse.created("승인 되었습니다.");
     }
 
     // 멤버 권한 수정하기

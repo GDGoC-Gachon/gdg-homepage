@@ -2,6 +2,7 @@ package com.gdg.homepage.landing.admin.service;
 
 import com.gdg.homepage.common.response.page.PageRequest;
 import com.gdg.homepage.common.response.page.PageResponse;
+import com.gdg.homepage.landing.admin.dto.MemberApproveRequest;
 import com.gdg.homepage.landing.member.domain.Member;
 import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.admin.dto.MemberListResponse;
@@ -77,6 +78,21 @@ public class MemberAdminServiceImpl implements MemberAdminService {
     @Override
     public int getTotalMembers() {
         return repository.findAll().size();
+    }
+
+    @Override
+    public void approveMember(MemberApproveRequest request) {
+        Member admin = repository.findById(request.getAdminId())
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 어드민이 존재하지 않습니다."));
+
+        Member member = repository.findById(request.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("승인할 멤버가 존재하지 않습니다."));
+
+        // 승인
+        member.getRegister().approve();
+
+        // 역할 변경
+        member.changeRole(admin, member);
     }
 
     @Override
