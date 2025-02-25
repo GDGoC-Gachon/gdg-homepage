@@ -1,6 +1,8 @@
 package com.gdg.homepage.landing.member.controller;
 
 import com.gdg.homepage.common.response.ApiResponse;
+import com.gdg.homepage.landing.member.dto.MemberLoginRequest;
+import com.gdg.homepage.landing.member.dto.MemberLoginResponse;
 import com.gdg.homepage.landing.member.dto.MemberRegisterWrapper;
 import com.gdg.homepage.landing.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,11 @@ public class MemberApi {
     public ApiResponse<String> create(@RequestBody MemberRegisterWrapper wrapper) {
         memberService.registerMember(wrapper.getMember(), wrapper.getApply());
         return ApiResponse.created("성공적으로 제출되었습니다.");
+    }
+
+    @PostMapping("/login")
+    public ApiResponse<MemberLoginResponse> login(@RequestBody MemberLoginRequest request){
+        return ApiResponse.ok(memberService.login(request));
     }
 
 }

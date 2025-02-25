@@ -1,7 +1,8 @@
 package com.gdg.homepage.landing.member.service;
 
-import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.member.domain.Member;
+import com.gdg.homepage.landing.member.dto.MemberLoginRequest;
+import com.gdg.homepage.landing.member.dto.MemberLoginResponse;
 import com.gdg.homepage.landing.member.dto.MemberRegisterRequest;
 import com.gdg.homepage.landing.member.dto.MemberRegisterResponse;
 import com.gdg.homepage.landing.register.api.dto.RegisterRequest;
@@ -16,6 +17,9 @@ public interface MemberService {
 
     // 회원가입
     MemberRegisterResponse registerMember(MemberRegisterRequest request, RegisterRequest registerRequest);
+
+    // 로그인
+    MemberLoginResponse login(MemberLoginRequest request);
 
     // 내 정보 조회하기
     Member loadMyMember(Long memberId);

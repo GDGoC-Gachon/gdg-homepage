@@ -1,9 +1,8 @@
 package com.gdg.homepage.landing.member.service;
 
-import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
+import com.gdg.homepage.common.security.jwt.provider.JwtTokenProvider;
 import com.gdg.homepage.landing.member.domain.Member;
-import com.gdg.homepage.landing.member.dto.MemberRegisterRequest;
-import com.gdg.homepage.landing.member.dto.MemberRegisterResponse;
+import com.gdg.homepage.landing.member.dto.*;
 import com.gdg.homepage.landing.member.repository.MemberRepository;
 import com.gdg.homepage.landing.register.api.dto.RegisterRequest;
 import com.gdg.homepage.landing.register.domain.Register;
@@ -11,9 +10,13 @@ import com.gdg.homepage.landing.register.service.RegisterService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @Transactional
@@ -23,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository repository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final JwtTokenProvider tokenProvider;
     private final RegisterService registerService;
     private final EmailService emailService;
 
@@ -42,6 +46,29 @@ public class MemberServiceImpl implements MemberService {
         Member member = Member.of(request.getEmail(), bCryptPasswordEncoder.encode(request.getPassword()), request.getName(), request.getPhoneNumber(), register);
 
         return MemberRegisterResponse.from(repository.save(member));
+    }
+
+    @Override
+    public MemberLoginResponse login(@RequestBody MemberLoginRequest request) {
+
+        Member member = repository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 이메일을 사용하는 유저가 없습니다."));
+
+        // 비밀번호 검증
+        if (!bCryptPasswordEncoder.matches(request.getPassword(), member.getPassword())) {
+            member.addPasswordError();  // 로그인 실패 시 패스워드 오류 증가
+            repository.save(member);
+            throw new BadCredentialsException("로그인 실패했습니다.");
+        }
+
+        // 토큰 생성  Authentication 객체 생성
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+        Authentication authentication = new UsernamePasswordAuthenticationToken
+                (userDetails, userDetails.getAuthorities());
+
+        String token = tokenProvider.generateAccessToken(authentication);
+
+        return MemberLoginResponse.from(member.getEmail(), token);
     }
 
     @Override
@@ -68,6 +95,8 @@ public class MemberServiceImpl implements MemberService {
 
         member.changePassword(bCryptPasswordEncoder.encode(newPassword));
     }
+
+
 
 
 }

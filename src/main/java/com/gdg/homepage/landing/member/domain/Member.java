@@ -42,6 +42,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @OneToOne(mappedBy = "member")
     private Register register;
 
+    private Integer passwordError;
 
     /// 생성자
     public static Member of(String email, String password, String name, String phoneNumber, Register register) {
@@ -92,6 +93,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.register = register;
 
         this.register.setMember(this);
+    }
+
+    public void addPasswordError() {
+        this.passwordError++;
     }
 
 

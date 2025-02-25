@@ -15,7 +15,6 @@ public class MemberRegisterResponse {
 
     private Long Id;
     private String userId;
-    private String jwtToken;
 
     // from
     public static MemberRegisterResponse from (Member member){
