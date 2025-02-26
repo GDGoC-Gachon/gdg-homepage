@@ -8,8 +8,10 @@ import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.admin.dto.MemberListResponse;
 import com.gdg.homepage.landing.admin.dto.MemberUpgradeRequest;
 import com.gdg.homepage.landing.admin.service.MemberAdminService;
+import com.gdg.homepage.landing.member.dto.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,14 +42,16 @@ public class MemberAdminApi {
 
     // 멤버 승인하기
     @PutMapping("/approve")
-    public ApiResponse<String> approveRole(@RequestBody @Valid MemberApproveRequest request){
+    public ApiResponse<String> approveRole(@AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody @Valid MemberApproveRequest request){
+        request.setAdminId(memberDetails.getId());
         adminService.approveMember(request);
         return ApiResponse.created("승인 되었습니다.");
     }
 
     // 멤버 권한 수정하기
     @PutMapping()
-    public ApiResponse<String> changeRole(@RequestBody @Valid MemberUpgradeRequest request) {
+    public ApiResponse<String> changeRole(@AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody @Valid MemberUpgradeRequest request) {
+        request.setAdminId(memberDetails.getId());
         adminService.changeRole(request);
         return ApiResponse.ok("권한 수정 성공되었습니다.");
     }

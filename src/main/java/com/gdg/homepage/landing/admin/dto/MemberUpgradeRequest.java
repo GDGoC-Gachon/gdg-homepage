@@ -9,8 +9,6 @@ import jakarta.validation.constraints.NotNull;
 @Data
 public class MemberUpgradeRequest {
 
-    @NotNull(message = "관리자 ID는 필수입니다.")
-    @Min(value = 1, message = "관리자 ID는 1 이상이어야 합니다.")
     private Long adminId;
 
     @NotNull(message = "회원 ID는 필수입니다.")

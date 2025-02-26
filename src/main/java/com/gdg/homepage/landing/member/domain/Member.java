@@ -80,6 +80,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
             throw new IllegalStateException("ORGANIZER 만 권한을 수정할 수 있습니다.");
         }
 
+        if (!this.register.isApproved()){
+            throw new IllegalStateException("신청서를 승인받지못한 멤버는 권한을 바꿀 수 없습니다. 승인 먼저 진행해주세요");
+        }
+
         this.role = role;
     }
 

@@ -3,7 +3,6 @@ package com.gdg.homepage.common.config;
 import com.gdg.homepage.common.security.jwt.filter.TokenAuthenticationFilter;
 import com.gdg.homepage.common.security.jwt.provider.JwtTokenProvider;
 import com.gdg.homepage.landing.member.domain.MemberRole;
-import com.gdg.homepage.landing.member.service.MemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final MemberDetailsService memberDetailsService;
-    private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
