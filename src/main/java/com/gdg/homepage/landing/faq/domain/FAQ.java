@@ -5,7 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 @Entity
 public class FAQ extends BaseTimeEntity {
 
@@ -17,4 +22,23 @@ public class FAQ extends BaseTimeEntity {
 
     private String answer;
 
+    @Builder
+    public FAQ(String question, String answer) {
+        this.question = question;
+        this.answer = answer;
+    }
+
+    // 질문 수정 메소드
+    public void updateQuestion(String question) {
+        if (question != null) {
+            this.question = question;
+        }
+    }
+
+    // 답변 수정 메소드
+    public void updateAnswer(String answer) {
+        if (answer != null) {
+            this.answer = answer;
+        }
+    }
 }
