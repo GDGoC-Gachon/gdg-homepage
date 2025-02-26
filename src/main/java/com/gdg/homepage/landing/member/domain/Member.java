@@ -1,7 +1,7 @@
 package com.gdg.homepage.landing.member.domain;
 
 import com.gdg.homepage.common.domain.BaseTimeEntity;
-import com.gdg.homepage.landing.apply.domain.Apply;
+import com.gdg.homepage.landing.register.domain.Register;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,7 +40,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private MemberRole role = MemberRole.NON_MEMBER;
 
     @OneToOne(mappedBy = "member")
-    private Apply register;
+    private Register register;
 
     private Integer passwordError;
 
