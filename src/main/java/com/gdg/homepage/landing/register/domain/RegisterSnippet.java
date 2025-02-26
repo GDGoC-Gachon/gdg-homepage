@@ -1,5 +1,7 @@
 package com.gdg.homepage.landing.register.domain;
 
+import com.gdg.homepage.landing.apply.domain.TechField;
+import com.gdg.homepage.landing.apply.domain.TechStack;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
