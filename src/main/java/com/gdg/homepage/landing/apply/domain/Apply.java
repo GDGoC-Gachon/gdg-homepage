@@ -1,13 +1,14 @@
-package com.gdg.homepage.landing.register.domain;
+package com.gdg.homepage.landing.apply.domain;
 
 import com.gdg.homepage.common.domain.BaseTimeEntity;
 import com.gdg.homepage.landing.admin.domain.JoinPeriod;
 import com.gdg.homepage.landing.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 
 
 @Entity
-public class Register extends BaseTimeEntity {
+public class Apply extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +24,24 @@ public class Register extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role registeredRole;
+    private Role appliedRole;
 
     @Embedded
-    private RegisterSnippet snippet;
+    private ApplySnippet snippet;
 
     private boolean approved = false;
 
+    @Builder
+    public Apply(Long id, Member member, JoinPeriod period, Role appliedRole, ApplySnippet snippet) {
+        this.id = id;
+        this.member = member;
+        this.period = period;
+        this.appliedRole = appliedRole;
+        this.snippet = snippet;
+    }
+
+    // 추가적으로 승인 상태 변경 메서드
+    public void approve() {
+        this.approved = true;
+    }
 }

@@ -1,7 +1,7 @@
 package com.gdg.homepage.landing.member.domain;
 
 import com.gdg.homepage.common.domain.BaseTimeEntity;
-import com.gdg.homepage.landing.register.domain.Register;
+import com.gdg.homepage.landing.apply.domain.Apply;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,7 +19,7 @@ public class Member extends BaseTimeEntity {
     private MemberRole role;
 
     @OneToOne(mappedBy = "member")
-    private Register register;
+    private Apply register;
 
 
 }

@@ -1,4 +1,4 @@
-package com.gdg.homepage.landing.register.domain;
+package com.gdg.homepage.landing.apply.domain;
 
 import java.util.Arrays;
 import java.util.List;
