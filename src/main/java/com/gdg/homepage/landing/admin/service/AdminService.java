@@ -18,5 +18,9 @@ public interface AdminService {
     // 가입 조기 종료
     void terminateJoinPeriod(Long id);
 
+    // 메인 페이지 조회 수 증가
+    void incrementPageView();
 
+    // 페이지 조회 수 조회
+    Long getPageViewCount();
 }

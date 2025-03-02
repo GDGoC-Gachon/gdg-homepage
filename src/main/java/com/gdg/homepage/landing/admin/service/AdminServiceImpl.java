@@ -3,9 +3,11 @@ package com.gdg.homepage.landing.admin.service;
 import com.gdg.homepage.common.response.CustomException;
 import com.gdg.homepage.common.response.ErrorCode;
 import com.gdg.homepage.landing.admin.domain.JoinPeriod;
+import com.gdg.homepage.landing.admin.domain.PageView;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodResponse;
 import com.gdg.homepage.landing.admin.repository.JoinPeriodRepository;
+import com.gdg.homepage.landing.admin.repository.PageViewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
 
     private final JoinPeriodRepository joinPeriodRepository;
+    private final PageViewRepository pageViewRepository;
 
     @Override
     public void createJoinPeriod(JoinPeriodRequest joinPeriodRequest) {
@@ -52,7 +55,7 @@ public class AdminServiceImpl implements AdminService {
     public List<JoinPeriodResponse> getAllJoinPeriods() {
         List<JoinPeriod> joinPeriods = joinPeriodRepository.findAll();
         return joinPeriods.stream()
-                .map(joinPeriod -> JoinPeriodResponse.from(joinPeriod))
+                .map(JoinPeriodResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -63,6 +66,19 @@ public class AdminServiceImpl implements AdminService {
 
         joinPeriod.terminateJoinPeriod();  // status 값을 false로 변경
         joinPeriodRepository.save(joinPeriod); // 변경 사항 저장
+    }
+
+    @Override
+    public void incrementPageView() {
+        //
+        PageView pageView=pageViewRepository.findById(1L).orElse(new PageView());
+        pageView.setViewCount(pageView.getViewCount()+1);
+        pageViewRepository.save(pageView);
+    }
+
+    @Override
+    public Long getPageViewCount() {
+        return pageViewRepository.getPageViewCount();
     }
 
 }
