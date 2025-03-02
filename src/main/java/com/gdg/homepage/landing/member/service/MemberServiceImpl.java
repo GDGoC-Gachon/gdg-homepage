@@ -106,7 +106,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = repository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
         String email = member.getEmail();
 
-        emailService.sendEmailVerification(email);
+//        emailService.sendEmail(email);
     }
 
     @Override

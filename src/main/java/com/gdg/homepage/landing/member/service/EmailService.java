@@ -1,5 +1,7 @@
 package com.gdg.homepage.landing.member.service;
 
+import jakarta.mail.MessagingException;
+
 public interface EmailService {
     /*
         회원가입 할 때, 인증 서비스
@@ -8,9 +10,9 @@ public interface EmailService {
 
 
     // 이메일 발송하기
-    void sendEmailVerification(String email);
+    void sendEmail(String toEmail) throws MessagingException;
 
     // 코드 검증하기
-    boolean verifyEmail(String email, String code);
+    boolean verifyCode(String email, String code);
 
 }

@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/api/v1/member/register", "/api/v1/member/login").permitAll()
+                        .requestMatchers("/", "/api/v1/member/register", "/api/v1/member/login","/api/v1/member/email","/api/v1/member/email/verify").permitAll()
                         .requestMatchers("/api/v1/member/**").hasAnyAuthority(
                                 MemberRole.MEMBER.getRole(), MemberRole.NON_MEMBER.getRole(),
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())

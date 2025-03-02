@@ -2,11 +2,10 @@ package com.gdg.homepage.landing.member.controller;
 
 import com.gdg.homepage.common.response.ApiResponse;
 import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
-import com.gdg.homepage.landing.member.dto.CustomUserDetails;
-import com.gdg.homepage.landing.member.dto.MemberLoginRequest;
-import com.gdg.homepage.landing.member.dto.MemberLoginResponse;
-import com.gdg.homepage.landing.member.dto.MemberRegisterWrapper;
+import com.gdg.homepage.landing.member.dto.*;
+import com.gdg.homepage.landing.member.service.EmailService;
 import com.gdg.homepage.landing.member.service.MemberService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +16,26 @@ import org.springframework.web.bind.annotation.*;
 public class MemberApi {
 
     private final MemberService memberService;
+    private final EmailService emailService;
+
+    // 이메일 전송하기
+    @PostMapping("/email")
+    public ApiResponse<String> email(@RequestBody EmailSendRequest request) throws MessagingException {
+        emailService.sendEmail(request.getEmail());
+        return ApiResponse.created("성공적으로 메일이 전송되었습니다.");
+    }
+
+    // 이메일 전송하기
+    @PostMapping("/email/verify")
+    public ApiResponse<String> verify(@RequestBody EmailVerifyRequest request) {
+        if (!emailService.verifyCode(request.getEmail(), request.getCode())){
+            throw new NotVerifiedException("인증번호가 틀렸습니다.");
+        }
+
+        return ApiResponse.created("메일이 인증되었습니다.");
+    }
+
+    // 이메일 검증하기
 
     @PostMapping("/register")
     public ApiResponse<String> create(@RequestBody MemberRegisterWrapper wrapper) {
