@@ -15,4 +15,6 @@ public interface EmailService {
     // 코드 검증하기
     boolean verifyCode(String email, String code);
 
+    // 비밀번호 변경 메일 발송하기
+    void sendPasswordResetEmail(String email,String token) throws MessagingException;
 }

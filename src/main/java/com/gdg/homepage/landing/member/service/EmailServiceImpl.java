@@ -6,6 +6,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,6 +24,9 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender emailSender;
     private final EmailRepository emailRepository;
+
+    @Value("${spring.mail.url}")
+    private String url;
 
     @Override
     public void sendEmail(String toEmail) throws MessagingException {
@@ -104,6 +108,50 @@ public class EmailServiceImpl implements EmailService {
     public void deleteExpiredCodes() {
         emailRepository.deleteByExpiresTimeBefore(LocalDateTime.now());
     }
+
+    ///  패스워드 초기화 메일 전송하기
+    @Override
+    public void sendPasswordResetEmail(String email,String token) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        // 기초 세팅
+        String title = "GDGoC Gachon 비밀번호 변경 링크";
+        String resetLink = url+"/api/v1/member/reset-password?token=" + token;
+
+
+        // 설정
+        helper.setTo(email);
+        helper.setSubject(title);
+
+        // 이메일 본문
+        String content = """
+    <html>
+    <body style="font-family: Arial, sans-serif; text-align: center;">
+        <h1 style="color: #4285F4;">Google Developer Groups on Campus Gachon University</h1>
+        <h2 style="color: #4CAF50;">이메일 인증 코드</h2>
+        <p>비밀번호 변경 링크입니다. 비밀번호 변경하기 버튼을 눌러 비밀번호를 변경해주세요..</p>
+        <div style="font-size: 24px; font-weight: bold; background: #f4f4f4; padding: 10px; display: inline-block; border-radius: 5px;">
+            %s
+        </div>
+        <p style="margin-top: 20px;">본 메일은 법령에 따른 통지 및 고지 의무사항으로 수신 동의 여부와 상관 없이 발송됩니다.</p>
+        <p style="color: #666; font-size: 12px;">Google Developer Groups of Gachon</p>
+    </body>
+    </html>
+""".formatted(resetLink); // 코드 삽입
+
+        helper.setText(content, true);
+
+        try {
+            emailSender.send(message);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            throw new MessagingException("메시지 전송에 실패했습니다.", e);
+        }
+    }
+
+
+
 
 
 }

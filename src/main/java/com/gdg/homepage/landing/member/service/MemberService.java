@@ -6,6 +6,7 @@ import com.gdg.homepage.landing.member.dto.MemberLoginResponse;
 import com.gdg.homepage.landing.member.dto.MemberRegisterRequest;
 import com.gdg.homepage.landing.member.dto.MemberRegisterResponse;
 import com.gdg.homepage.landing.register.api.dto.RegisterRequest;
+import jakarta.mail.MessagingException;
 
 public interface MemberService {
 
@@ -28,7 +29,7 @@ public interface MemberService {
     MemberDetailResponse loadMyMember(Long memberId);
 
     // 비밀번호 변경요청하기
-    void requestPasswordChange(Long memberId);
+    void requestPasswordChange(Long memberId) throws MessagingException;
 
     // 비밀번호 변경하기
     void changePassword(Long memberId, String newPassword, String confirmPassword);
