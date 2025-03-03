@@ -58,6 +58,12 @@ public class MemberApi {
         return ApiResponse.ok(memberService.loadMyMember(memberDetails.getId()));
     }
 
+    @DeleteMapping()
+    public ApiResponse<String> delete(@AuthenticationPrincipal CustomUserDetails memberDetails) {
+        memberService.deleteMember(memberDetails.getId());
+        return ApiResponse.ok("성공적으로 탈퇴되었습니다.");
+    }
+
     @PostMapping("/request")
     public ApiResponse<String> requestReset(@AuthenticationPrincipal CustomUserDetails memberDetails) throws MessagingException {
         memberService.requestPasswordChange(memberDetails.getId());

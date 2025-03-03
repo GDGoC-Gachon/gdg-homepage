@@ -64,6 +64,17 @@ public class RegisterServiceImpl implements RegisterService {
         return registerRepository.save(existingRegister);
     }
 
+    @Override
+    public void deleteRegister(Long memberId) {
+        Register register = getRegisterByMemberId(memberId);
+        registerRepository.delete(register);
+    }
+
+    @Override
+    public long checkNowRegister(LocalDateTime now) {
+        return registerRepository.countByCurrentJoinPeriod(now);
+    }
+
     // 내부 함수
     private Register getRegisterByMemberId(Long memberId) {
         return registerRepository.findByMemberId(memberId)

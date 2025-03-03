@@ -138,7 +138,13 @@ public class MemberServiceImpl implements MemberService {
         member.changePassword(bCryptPasswordEncoder.encode(newPassword));
     }
 
+    @Override
+    public void deleteMember(Long memberId) {
 
+        repository.deleteById(memberId);
+        registerService.deleteRegister(memberId);
+
+    }
 
 
 }

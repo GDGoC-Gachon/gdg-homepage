@@ -8,6 +8,7 @@ import com.gdg.homepage.landing.admin.dto.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodResponse;
 import com.gdg.homepage.landing.admin.repository.JoinPeriodRepository;
 import com.gdg.homepage.landing.admin.repository.PageViewRepository;
+import com.gdg.homepage.landing.register.repository.RegisterRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,8 @@ public class AdminServiceImpl implements AdminService {
 
     private final JoinPeriodRepository joinPeriodRepository;
     private final PageViewRepository pageViewRepository;
+
+    private final RegisterRepository registerRepository;
 
     @Override
     public void createJoinPeriod(JoinPeriodRequest joinPeriodRequest) {
@@ -76,6 +79,11 @@ public class AdminServiceImpl implements AdminService {
                 .orElseThrow(() -> new EntityNotFoundException("현재 시간에 대한 가입기간 설정이 존재하지 않습니다."));
     }
 
+    @Override
+    public int getRegisterCount(LocalDateTime now) {
+        return 0;
+    }
+
 
     @Override
     public void incrementPageView() {
@@ -87,7 +95,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Long getPageViewCount() {
-        return pageViewRepository.getPageViewCount();
+        Long count = pageViewRepository.getPageViewCount(); // 가정한 로직
+        return count != null ? count : 0L;
     }
+
 
 }

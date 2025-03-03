@@ -3,12 +3,16 @@ package com.gdg.homepage.landing.admin.controller;
 import com.gdg.homepage.common.response.ApiResponse;
 import com.gdg.homepage.common.response.CustomException;
 import com.gdg.homepage.common.response.ErrorCode;
+import com.gdg.homepage.landing.admin.dto.AnalyticsResponse;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodResponse;
 import com.gdg.homepage.landing.admin.service.AdminServiceImpl;
+import com.gdg.homepage.landing.admin.service.MemberAdminServiceImpl;
+import com.gdg.homepage.landing.register.service.RegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -17,6 +21,8 @@ import java.util.List;
 public class AdminApi {
 
     private final AdminServiceImpl adminService;
+    private final MemberAdminServiceImpl memberAdminService;
+    private final RegisterService registerService;
 
     // 가입 일정 생성
     @PostMapping("/joinPeriod/create")
@@ -71,6 +77,17 @@ public class AdminApi {
         }catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // 분석 페이지
+    @GetMapping("/analytic")
+    public ApiResponse<AnalyticsResponse> getAnayltics() {
+
+        int total = memberAdminService.getTotalMembers() - 1; // 기본 오거나이저 계정은 카운트에서 삭제
+        long view = adminService.getPageViewCount();
+        long register = registerService.checkNowRegister(LocalDateTime.now());
+
+        return ApiResponse.ok(AnalyticsResponse.from(total, register, view, 0, "미정"));
     }
 
 
