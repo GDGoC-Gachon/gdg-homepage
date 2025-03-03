@@ -1,8 +1,6 @@
 package com.gdg.homepage.landing.register.api.dto;
 
-import com.gdg.homepage.landing.register.domain.TechField;
-import com.gdg.homepage.landing.register.domain.TechStack;
-import com.gdg.homepage.landing.register.domain.Role;
+import com.gdg.homepage.landing.register.domain.*;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,6 +23,19 @@ public class RegisterResponse {
                 .major(major)
                 .techField(techField)  // Enum 그대로 사용
                 .techStack(techStack)
+                .build();
+    }
+
+    public static RegisterResponse from(Register register) {
+        RegisterSnippet snippet = register.getSnippet();
+
+        return RegisterResponse.builder()
+                .studentId(snippet.getStudentId())
+                .role(register.getRegisteredRole())  // Role 자체를 저장 (String 변환 X)
+                .grade(snippet.getGrade())
+                .major(snippet.getMajor())
+                .techField(snippet.getTechField())  // Enum 그대로 사용
+                .techStack(snippet.getTechStack())
                 .build();
     }
 }

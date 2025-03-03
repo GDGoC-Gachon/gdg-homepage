@@ -3,7 +3,6 @@ package com.gdg.homepage.landing.member.controller;
 import com.gdg.homepage.common.response.ApiResponse;
 import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.member.dto.*;
-import com.gdg.homepage.landing.member.exception.NotVerifiedException;
 import com.gdg.homepage.landing.member.service.EmailService;
 import com.gdg.homepage.landing.member.service.MemberService;
 import jakarta.mail.MessagingException;

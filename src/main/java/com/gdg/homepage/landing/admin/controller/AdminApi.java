@@ -61,15 +61,9 @@ public class AdminApi {
         }
     }
 
-    //  페이지 조회 수 증가
-    @PostMapping("pageView/increment")
-    public ApiResponse<String> incrementPageViewCount() {
-       adminService.incrementPageView();
-        return ApiResponse.ok("조회수 증가");
-    }
 
     // 분석 페이지 -> 페이지 조회 수 확인
-    @GetMapping("pageView/getPageViewCount")
+    @GetMapping("/pageView/getPageViewCount")
     public ApiResponse<Long> getPageViewCount() {
         try{
             Long pageViewCount=adminService.getPageViewCount();

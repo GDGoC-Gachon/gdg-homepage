@@ -58,11 +58,7 @@ public class Register extends BaseTimeEntity {
 
 
     // 수정 필요
-
     public void updateSnippet(RegisterSnippet snippet) {
-
-    }
-
-    public void updateRole(Role role) {
+        this.snippet = snippet;
     }
 }
