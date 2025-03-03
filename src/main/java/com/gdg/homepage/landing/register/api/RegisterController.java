@@ -21,7 +21,9 @@ public class RegisterController {
     // 📌 1. 회원 등록 (Create)
     @PostMapping("/create")
     public ResponseEntity<RegisterResponse> createRegister(@RequestBody RegisterRequest request) {
+        // 시간 관련 로직을 제외한 createRegister 로직
         Register register = registerService.createRegister(request);
+
         RegisterResponse response = RegisterResponse.from(
                 register.getSnippet().getStudentId(),
                 register.getRegisteredRole(),
@@ -34,7 +36,7 @@ public class RegisterController {
     }
 
     // 📌 2. 특정 회원 조회 (Read)
-    @GetMapping("registers/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<RegisterResponse> getRegisterById(@PathVariable Long id) {
         Register register = registerService.getRegisterById(id);
         RegisterResponse response = RegisterResponse.from(
@@ -53,6 +55,11 @@ public class RegisterController {
     public ResponseEntity<List<RegisterResponse>> getAllRegisters() {
         List<RegisterResponse> responses = registerService.getAllRegisters();
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<RegisterResponse>> getRegisters() {
+        return getAllRegisters();
     }
 
     // 📌 4. 회원 정보 수정 (Update)

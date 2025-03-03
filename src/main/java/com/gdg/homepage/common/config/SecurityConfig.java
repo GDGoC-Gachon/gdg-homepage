@@ -31,7 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/member/**").hasAnyAuthority(
                                 MemberRole.MEMBER.getRole(), MemberRole.NON_MEMBER.getRole(),
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
-                        .requestMatchers("/api/v1/registers/").permitAll()
+                        .requestMatchers("/registers/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority(
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
                         .anyRequest().authenticated()
