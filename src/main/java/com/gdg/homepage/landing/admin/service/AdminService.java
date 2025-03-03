@@ -1,7 +1,9 @@
 package com.gdg.homepage.landing.admin.service;
 
+import com.gdg.homepage.landing.admin.domain.JoinPeriod;
 import com.gdg.homepage.landing.admin.dto.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AdminService {
@@ -17,6 +19,9 @@ public interface AdminService {
 
     // 가입 조기 종료
     void terminateJoinPeriod(Long id);
+
+    // 가입기간 여부 체크하기
+    JoinPeriod checkJoinPeriod(LocalDateTime now);
 
     // 메인 페이지 조회 수 증가
     void incrementPageView();

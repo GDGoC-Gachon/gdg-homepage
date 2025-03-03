@@ -18,23 +18,6 @@ public class RegisterController {
 
     private final RegisterService registerService;
 
-    // 📌 1. 회원 등록 (Create)
-    @PostMapping("/create")
-    public ResponseEntity<RegisterResponse> createRegister(@RequestBody RegisterRequest request) {
-        // 시간 관련 로직을 제외한 createRegister 로직
-        Register register = registerService.createRegister(request);
-
-        RegisterResponse response = RegisterResponse.from(
-                register.getSnippet().getStudentId(),
-                register.getRegisteredRole(),
-                register.getSnippet().getGrade(),
-                register.getSnippet().getMajor(),
-                register.getSnippet().getTechField(),
-                register.getSnippet().getTechStack()
-        );
-        return ResponseEntity.created(URI.create("/registers/" + register.getId())).body(response);
-    }
-
     // 📌 2. 특정 회원 조회 (Read)
     @GetMapping("/{id}")
     public ResponseEntity<RegisterResponse> getRegisterById(@PathVariable Long id) {

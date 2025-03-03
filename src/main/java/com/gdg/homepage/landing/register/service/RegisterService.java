@@ -10,8 +10,6 @@ public interface RegisterService {
     // 회원 생성과 함께 사용할 내부 메서드
     Register createRegister(RegisterRequest request);
 
-
-
     // 조회 관련 메서드 (관리자용)
     Register getRegisterById(Long id);
 

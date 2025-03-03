@@ -8,11 +8,13 @@ import com.gdg.homepage.landing.admin.dto.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodResponse;
 import com.gdg.homepage.landing.admin.repository.JoinPeriodRepository;
 import com.gdg.homepage.landing.admin.repository.PageViewRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,6 +69,13 @@ public class AdminServiceImpl implements AdminService {
         joinPeriod.terminateJoinPeriod();  // status 값을 false로 변경
         joinPeriodRepository.save(joinPeriod); // 변경 사항 저장
     }
+
+    @Override
+    public JoinPeriod checkJoinPeriod(LocalDateTime now) {
+        return joinPeriodRepository.findActiveJoinPeriod(now)
+                .orElseThrow(() -> new EntityNotFoundException("현재 시간에 대한 가입기간 설정이 존재하지 않습니다."));
+    }
+
 
     @Override
     public void incrementPageView() {
