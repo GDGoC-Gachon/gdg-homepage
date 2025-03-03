@@ -3,16 +3,16 @@ package com.gdg.homepage.landing.admin.service;
 import com.gdg.homepage.common.response.CustomException;
 import com.gdg.homepage.common.response.ErrorCode;
 import com.gdg.homepage.landing.admin.domain.JoinPeriod;
+import com.gdg.homepage.landing.admin.domain.PageView;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodResponse;
 import com.gdg.homepage.landing.admin.repository.JoinPeriodRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.gdg.homepage.landing.admin.repository.PageViewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
 
     private final JoinPeriodRepository joinPeriodRepository;
+    private final PageViewRepository pageViewRepository;
 
     @Override
     public void createJoinPeriod(JoinPeriodRequest joinPeriodRequest) {
@@ -54,7 +55,7 @@ public class AdminServiceImpl implements AdminService {
     public List<JoinPeriodResponse> getAllJoinPeriods() {
         List<JoinPeriod> joinPeriods = joinPeriodRepository.findAll();
         return joinPeriods.stream()
-                .map(joinPeriod -> JoinPeriodResponse.from(joinPeriod))
+                .map(JoinPeriodResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -68,9 +69,16 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public JoinPeriod checkJoinPeriod(LocalDateTime now) {
-        return joinPeriodRepository.findActiveJoinPeriod(now)
-                .orElseThrow(() -> new EntityNotFoundException("현재 시간에 대한 가입기간 설정이 존재하지 않습니다."));
+    public void incrementPageView() {
+        //
+        PageView pageView=pageViewRepository.findById(1L).orElse(new PageView());
+        pageView.setViewCount(pageView.getViewCount()+1);
+        pageViewRepository.save(pageView);
+    }
+
+    @Override
+    public Long getPageViewCount() {
+        return pageViewRepository.getPageViewCount();
     }
 
 }

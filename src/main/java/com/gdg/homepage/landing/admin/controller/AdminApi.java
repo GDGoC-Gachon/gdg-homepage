@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/joinPeriod")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminApi {
 
     private final AdminServiceImpl adminService;
 
     // 가입 일정 생성
-    @PostMapping("/create")
+    @PostMapping("/joinPeriod/create")
     public ApiResponse<String> createJoinPeriod(@RequestBody JoinPeriodRequest JoinPeriodRequest) {
         try {
             adminService.createJoinPeriod(JoinPeriodRequest);
@@ -30,7 +30,7 @@ public class AdminApi {
     }
 
     // 가입 일정 수정
-    @PutMapping("/update/{id}")
+    @PutMapping("/joinPeriod/update/{id}")
     public ApiResponse<JoinPeriodResponse> updateJoinPeriod(@PathVariable("id") Long id, @RequestBody JoinPeriodRequest JoinPeriodRequest) {
         try {
             JoinPeriodResponse JoinPeriodResponseDto = adminService.updateJoinPeriod(id, JoinPeriodRequest);
@@ -40,7 +40,7 @@ public class AdminApi {
         }
     }
     // 가입 목록 조회
-    @GetMapping("/all")
+    @GetMapping("/joinPeriod/all")
     public ApiResponse<List<JoinPeriodResponse>> getAllJoinPeriods() {
         try {
             List<JoinPeriodResponse> JoinPeriodResponseDtos = adminService.getAllJoinPeriods();
@@ -51,12 +51,30 @@ public class AdminApi {
     }
 
     // 가입 조기 종료
-    @DeleteMapping("/terminate/{id}")
+    @DeleteMapping("/joinPeriod/terminate/{id}")
     public ApiResponse<String> terminateJoinPeriod(@PathVariable("id") Long id) {
         try {
             adminService.terminateJoinPeriod(id);
             return ApiResponse.ok("JoinPeriod is terminated.");
         } catch (Exception e) {
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //  페이지 조회 수 증가
+    @PostMapping("pageView/increment")
+    public ApiResponse<String> incrementPageViewCount() {
+       adminService.incrementPageView();
+        return ApiResponse.ok("조회수 증가");
+    }
+
+    // 분석 페이지 -> 페이지 조회 수 확인
+    @GetMapping("pageView/getPageViewCount")
+    public ApiResponse<Long> getPageViewCount() {
+        try{
+            Long pageViewCount=adminService.getPageViewCount();
+            return ApiResponse.ok(pageViewCount);
+        }catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
