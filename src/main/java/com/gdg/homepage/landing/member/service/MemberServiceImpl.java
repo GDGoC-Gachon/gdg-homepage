@@ -3,11 +3,14 @@ package com.gdg.homepage.landing.member.service;
 import com.gdg.homepage.common.security.jwt.provider.JwtTokenProvider;
 import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.member.domain.Member;
+import com.gdg.homepage.landing.member.domain.ResetToken;
 import com.gdg.homepage.landing.member.dto.*;
 import com.gdg.homepage.landing.member.repository.MemberRepository;
+import com.gdg.homepage.landing.member.repository.ResetTokenRepository;
 import com.gdg.homepage.landing.register.api.dto.RegisterRequest;
 import com.gdg.homepage.landing.register.domain.Register;
 import com.gdg.homepage.landing.register.service.RegisterService;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Slf4j
 @Service
 @Transactional
@@ -28,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository repository;
+    private final ResetTokenRepository tokenRepository;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final JwtTokenProvider tokenProvider;
@@ -102,18 +110,29 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void requestPasswordChange(Long memberId) {
-        Member member = repository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
-        String email = member.getEmail();
+    public void requestPasswordChange(Long memberId) throws MessagingException {
+        Member member = repository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
 
-        emailService.sendEmailVerification(email);
+        // 기존 토큰 삭제 (중복 요청 방지)
+        tokenRepository.deleteByMember(member);
+
+        // 새로운 토큰 생성
+        String token = UUID.randomUUID().toString();
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(30);
+
+        ResetToken resetToken = ResetToken.of(member, token, expiresAt);
+        tokenRepository.save(resetToken);
+
+        // 이메일 전송
+        emailService.sendPasswordResetEmail(member.getEmail(), resetToken.getToken());
     }
 
     @Override
     public void changePassword(Long memberId, String newPassword, String confirmPassword) {
         Member member = repository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
 
-        if (!bCryptPasswordEncoder.matches(newPassword, member.getPassword())) {
+        if (!newPassword.equals(confirmPassword)) {
             throw new IllegalStateException("설정한 비밀번호가 서로 다릅니다.");
         }
 
