@@ -99,11 +99,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.register.setMember(this);
     }
 
-    public void addPasswordError() {
-        this.passwordError++;
-    }
-
-
     /// 시큐리티 Override
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

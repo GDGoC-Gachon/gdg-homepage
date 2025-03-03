@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -48,7 +49,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             // 인증 정보를 SecurityContext에 설정
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        } catch (Exception e) {
+        } catch (AccessDeniedException e) {
             log.error("로그인 인증 실패: {}", e.getMessage()); // 인증 실패 로그
             SecurityContextHolder.clearContext(); // 인증 실패 시 컨텍스트 초기화
         }
