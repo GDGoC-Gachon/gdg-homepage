@@ -1,5 +1,6 @@
 package com.gdg.homepage.landing.member.service;
 
+import com.gdg.homepage.landing.member.controller.NotVerifiedException;
 import com.gdg.homepage.landing.member.domain.VerificationCode;
 import com.gdg.homepage.landing.member.repository.EmailRepository;
 import jakarta.mail.MessagingException;
@@ -101,7 +102,7 @@ public class EmailServiceImpl implements EmailService {
                     emailRepository.delete(vc); // 검증 후 삭제
                     return true;
                 })
-                .orElse(false);
+                .orElseThrow(() -> new NotVerifiedException("유효하지 않거나 만료된 코드입니다."));
     }
 
     @Scheduled(cron = "0 0 12 * * *") // 매일 정오(12:00 PM) 실행
