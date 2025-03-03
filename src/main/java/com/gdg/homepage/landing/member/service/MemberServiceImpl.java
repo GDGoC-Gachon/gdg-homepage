@@ -67,7 +67,6 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 이메일을 사용하는 유저가 없습니다."));
 
         if (!bCryptPasswordEncoder.matches(request.getPassword(), member.getPassword())) {
-            member.addPasswordError();
             repository.save(member);
             throw new BadCredentialsException("로그인 실패했습니다.");
         }

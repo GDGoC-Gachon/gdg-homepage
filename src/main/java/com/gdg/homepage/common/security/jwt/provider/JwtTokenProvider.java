@@ -9,6 +9,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -94,7 +95,7 @@ public class JwtTokenProvider {
         Long userId = claims.get("userId", Long.class);
 
         Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("유효하지 않은 사용자 ID: " + userId));
+                .orElseThrow(() -> new AccessDeniedException("유효하지 않은 사용자 ID: " + userId));
 
         CustomUserDetails userDetails = new CustomUserDetails(member);
         return new UsernamePasswordAuthenticationToken(userDetails, token, authorities);
