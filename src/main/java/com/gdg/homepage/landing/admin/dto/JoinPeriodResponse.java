@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 public class JoinPeriodResponse {
+    private Long id;
     private String title;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -17,6 +18,7 @@ public class JoinPeriodResponse {
     
     public static JoinPeriodResponse from(JoinPeriod joinPeriod) {
         return JoinPeriodResponse.builder()
+                .id(joinPeriod.getId())
                 .title(joinPeriod.getTitle())
                 .startDate(joinPeriod.getStartDate())
                 .endDate(joinPeriod.getEndDate())

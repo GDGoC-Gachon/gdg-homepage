@@ -76,12 +76,17 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     //  Organizer가 특정 유저에 대한 권한을 수정할 수 있는 로직
     public void upgradeRole(Member admin, MemberRole role) {
+
         if (admin.getRole() != MemberRole.ORGANIZER) {
             throw new IllegalStateException("ORGANIZER 만 권한을 수정할 수 있습니다.");
         }
 
         if (!this.register.isApproved()){
             throw new IllegalStateException("신청서를 승인받지못한 멤버는 권한을 바꿀 수 없습니다. 승인 먼저 진행해주세요");
+        }
+
+        if(role.equals(MemberRole.ORGANIZER)){
+            throw new IllegalStateException("ORGANIZER로 승급할 수 없습니다.");
         }
 
         this.role = role;
@@ -98,11 +103,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
         this.register.setMember(this);
     }
-
-    public void addPasswordError() {
-        this.passwordError++;
-    }
-
 
     /// 시큐리티 Override
     @Override
