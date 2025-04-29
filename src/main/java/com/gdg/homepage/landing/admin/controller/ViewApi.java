@@ -1,8 +1,10 @@
 package com.gdg.homepage.landing.admin.controller;
 
 import com.gdg.homepage.common.response.ApiResponse;
+import com.gdg.homepage.landing.admin.dto.AnalyticsResponse;
 import com.gdg.homepage.landing.admin.service.AdminServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,4 +21,10 @@ public class ViewApi {
         return ApiResponse.ok("조회수 증가");
     }
 
+    @GetMapping("/pageView")
+    public ApiResponse<AnalyticsResponse> getStatistics() {
+        return ApiResponse.ok(adminService.collectStatistics());
+    }
+
 }
+

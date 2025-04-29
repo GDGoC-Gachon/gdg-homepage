@@ -1,25 +1,50 @@
 package com.gdg.homepage.landing.admin.dto;
+
 import lombok.Builder;
 import lombok.Getter;
+
 import java.util.Optional;
 
 @Getter
 @Builder
 public class AnalyticsResponse {
 
-    private int total;       // 총 멤버 수
-    private long count;      // 가입 신청 수
-    private long view;       // 페이지 뷰 수
-    private int deleteCount; // 탈퇴 회원 수
-    private String role;     // 인기 역할
+    private int totalMember;       // 총 멤버 수
+    private int memberIncrease;   // 신규 가입자 수
 
-    public static AnalyticsResponse from(Integer total, Long count, Long view, Integer deleteCount, String role) {
+    private long registerCount;      // 가입 신청 수
+    private long registerIncrease; // 가입 신청 증가 수
+
+    private int deactivations; // 탈퇴 회원 수
+    private int deactivationsIncrease;// 탈퇴 회원 증가 수
+
+    private long pageView;       // 페이지 뷰 수
+    private long pageViewIncrease; // 페이지 뷰 증가 수
+
+    private int deleteCount; // 탈퇴 회원 수
+    private String popularStack;     // 인기 역할
+
+    public static AnalyticsResponse from(
+            Integer totalMember,
+            Long memberIncrease,
+            Long registerCount,
+            Long registerIncrease,
+            Long pageView,
+            Long pageViewIncrease,
+            Integer deactivateMemberCount,
+            Integer deactivationIncrease,
+            String popularStack) {
         return AnalyticsResponse.builder()
-                .total(Optional.ofNullable(total).orElse(0))
-                .count(Optional.ofNullable(count).orElse(0L))
-                .view(Optional.ofNullable(view).orElse(0L))
-                .deleteCount(Optional.ofNullable(deleteCount).orElse(0))
-                .role(Optional.ofNullable(role).orElse("N/A")) // 역할이 없는 경우 기본값 "N/A"
+                .totalMember(Optional.ofNullable(totalMember).orElse(0))
+                .memberIncrease(Optional.ofNullable(memberIncrease).orElse(0L).intValue())
+                .registerCount(Optional.ofNullable(registerCount).orElse(0L))
+                .registerIncrease(Optional.ofNullable(registerIncrease).orElse(0L))
+                .pageView(Optional.ofNullable(pageView).orElse(0L))
+                .pageViewIncrease(Optional.ofNullable(pageViewIncrease).orElse(0L))
+                .deleteCount(Optional.ofNullable(deactivateMemberCount).orElse(0))
+                .deactivationsIncrease(Optional.ofNullable(deactivationIncrease).orElse(0))
+                .popularStack(popularStack)
                 .build();
     }
 }
+
