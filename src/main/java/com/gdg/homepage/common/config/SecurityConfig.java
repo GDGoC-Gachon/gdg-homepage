@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,6 +21,13 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers("/login?error", "/error", "/favicon.ico");
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -27,7 +35,7 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/pageView/increment", "/api/v1/member/register", "/api/v1/member/login", "/api/v1/member/email", "/api/v1/member/email/verify").permitAll()
+                        .requestMatchers("/","/error", "/pageView/increment", "/api/v1/member/register", "/api/v1/member/login", "/api/v1/member/email", "/api/v1/member/email/verify").permitAll()
                         .requestMatchers("/api/v1/member/**").hasAnyAuthority(
                                 MemberRole.MEMBER.getRole(), MemberRole.NON_MEMBER.getRole(),
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
