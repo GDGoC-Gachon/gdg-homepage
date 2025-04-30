@@ -3,6 +3,7 @@ package com.gdg.homepage.landing.admin.controller;
 import com.gdg.homepage.common.response.ApiResponse;
 import com.gdg.homepage.common.response.CustomException;
 import com.gdg.homepage.common.response.ErrorCode;
+import com.gdg.homepage.landing.admin.dto.AnalyticsResponse;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodResponse;
 import com.gdg.homepage.landing.admin.service.AdminServiceImpl;
@@ -65,6 +66,11 @@ public class AdminApi {
         }
     }
 
+    // 분석 대시보드 조회
+    @GetMapping("/analytic")
+    public ApiResponse<AnalyticsResponse> getStatistics() {
+        return ApiResponse.ok(adminService.collectStatistics());
+    }
 
 }
 

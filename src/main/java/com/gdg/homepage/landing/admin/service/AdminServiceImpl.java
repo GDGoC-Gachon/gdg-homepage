@@ -4,10 +4,12 @@ import com.gdg.homepage.common.response.CustomException;
 import com.gdg.homepage.common.response.ErrorCode;
 import com.gdg.homepage.landing.admin.domain.JoinPeriod;
 import com.gdg.homepage.landing.admin.domain.PageView;
+import com.gdg.homepage.landing.admin.dto.AnalyticsResponse;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodResponse;
 import com.gdg.homepage.landing.admin.repository.JoinPeriodRepository;
 import com.gdg.homepage.landing.admin.repository.PageViewRepository;
+import com.gdg.homepage.landing.member.repository.MemberRepository;
 import com.gdg.homepage.landing.register.repository.RegisterRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -27,13 +29,22 @@ public class AdminServiceImpl implements AdminService {
 
     private final JoinPeriodRepository joinPeriodRepository;
     private final PageViewRepository pageViewRepository;
-
     private final RegisterRepository registerRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public void createJoinPeriod(JoinPeriodRequest joinPeriodRequest) {
+        // period생성할 때 start~end사이에 겹치지 않도록 설정
+        LocalDateTime startDate = joinPeriodRequest.getStartDate();
+        LocalDateTime endDate = joinPeriodRequest.getEndDate();
+        // 기간 겹침 여부 확인
+        boolean isOverlapping = joinPeriodRepository.periodExist(endDate, startDate);
+        if (isOverlapping) {
+            throw new IllegalArgumentException("해당 기간은 이미 존재하는 가입 기간과 겹칩니다.");
+        }
+
         // 가입 기간 생성
-        JoinPeriod joinPeriod=JoinPeriod.builder()
+        JoinPeriod joinPeriod = JoinPeriod.builder()
                 .title(joinPeriodRequest.getTitle())
                 .startDate(joinPeriodRequest.getStartDate())
                 .endDate(joinPeriodRequest.getEndDate())
@@ -49,7 +60,7 @@ public class AdminServiceImpl implements AdminService {
         //
         JoinPeriod joinPeriod = joinPeriodRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_END_POINT));
         // 요청 값이 존재하면 수정
-        if(joinPeriodRequest!=null) {
+        if (joinPeriodRequest != null) {
             joinPeriod.updateJoinPeriod(joinPeriodRequest);
         }
         JoinPeriod updatedJoinPeriod = joinPeriodRepository.save(joinPeriod);
@@ -87,17 +98,53 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void incrementPageView() {
-        //
-        PageView pageView=pageViewRepository.findById(1L).orElse(new PageView());
-        pageView.setViewCount(pageView.getViewCount()+1);
+        PageView pageView = pageViewRepository.findById(1L).orElse(new PageView());
+        pageView.setViewCount(pageView.getViewCount() + 1);
         pageViewRepository.save(pageView);
     }
 
     @Override
-    public Long getPageViewCount() {
-        Long count = pageViewRepository.getPageViewCount(); // 가정한 로직
-        return count != null ? count : 0L;
+    public AnalyticsResponse collectStatistics() {
+        System.out.println("previousJoinPeriod = ");
+
+        JoinPeriod joinPeriod = getCurrentJoinPeriod();
+        System.out.println("previousJoinPeriod = " + joinPeriod);
+
+        LocalDateTime startDate = joinPeriod.getStartDate();
+        System.out.println("startDate = " + startDate);
+        LocalDateTime endDate = joinPeriod.getEndDate(); // 필요 시 사용
+        System.out.println("endDate = " + endDate);
+
+        var memberStats = memberRepository.getMemberStatistics(startDate);
+        System.out.println("memberStats = " + memberStats);
+        var appStats = registerRepository.getApplicationStatistics(startDate);
+        System.out.println("appStats = " + appStats);
+        var viewStats = pageViewRepository.getPageViewStatistics(startDate);
+        System.out.println("viewStats = " + viewStats);
+        var deactivationStats = memberRepository.getDeactivationStatistics(startDate);
+        System.out.println("deactivationStats = " + deactivationStats);
+        var popularStack = memberRepository.findPopularStack(startDate, endDate);
+        System.out.println("popularStack = " + popularStack);
+
+        return AnalyticsResponse.from(
+                memberStats.total(),
+                memberStats.increase(),
+                appStats.total(),
+                appStats.increase(),
+                viewStats.total(),
+                viewStats.increase(),
+                deactivationStats.total(),
+                deactivationStats.change(),
+                popularStack.toString()
+        );
     }
+
+    private JoinPeriod getCurrentJoinPeriod() {
+        return joinPeriodRepository.findCurrentJoinPeriod(LocalDateTime.now())
+                .orElseThrow(() -> new EntityNotFoundException("가입 기간을 찾을 수 없습니다."));
+    }
+
+
 
 
 }
