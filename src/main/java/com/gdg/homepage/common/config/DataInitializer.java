@@ -44,8 +44,9 @@ public class DataInitializer {
             JoinPeriod forAdmin = JoinPeriod.builder()
                     .title("어드민 생성")
                     .startDate(LocalDateTime.of(2020, 1, 1, 0, 0))
-                    .endDate(LocalDateTime.of(2020, 12, 31, 23, 59))
+                    .endDate(LocalDateTime.of(2025, 12, 31, 23, 59))
                     .maxMember(1)
+                    .status(true)
                     .build();
 
             joinPeriodRepository.save(forAdmin);

@@ -3,13 +3,11 @@ package com.gdg.homepage.landing.register.api.dto;
 import com.gdg.homepage.landing.register.domain.Role;
 import com.gdg.homepage.landing.register.domain.TechField;
 import com.gdg.homepage.landing.register.domain.TechStack;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 public class RegisterRequest {
