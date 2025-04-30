@@ -140,8 +140,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMember(Long memberId) {
-
-        repository.deleteById(memberId);
+        // 상태를 boolean으로 바꾸기
+        repository.updateWithDraw(memberId);
         registerService.deleteRegister(memberId);
 
     }

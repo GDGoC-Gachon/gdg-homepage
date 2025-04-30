@@ -44,6 +44,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private Integer passwordError;
 
+    private Boolean withDraw = false;
+
     /// 생성자
     public static Member of(String email, String password, String name, String phoneNumber, Register register) {
 
