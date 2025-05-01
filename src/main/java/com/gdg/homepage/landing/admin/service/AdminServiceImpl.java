@@ -105,34 +105,24 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AnalyticsResponse collectStatistics() {
-        System.out.println("previousJoinPeriod = ");
 
         JoinPeriod joinPeriod = getCurrentJoinPeriod();
-        System.out.println("previousJoinPeriod = " + joinPeriod);
-
         LocalDateTime startDate = joinPeriod.getStartDate();
-        System.out.println("startDate = " + startDate);
         LocalDateTime endDate = joinPeriod.getEndDate(); // 필요 시 사용
-        System.out.println("endDate = " + endDate);
 
         var memberStats = memberRepository.getMemberStatistics(startDate);
-        System.out.println("memberStats = " + memberStats);
         var appStats = registerRepository.getApplicationStatistics(startDate);
-        System.out.println("appStats = " + appStats);
         var viewStats = pageViewRepository.getPageViewStatistics(startDate);
-        System.out.println("viewStats = " + viewStats);
         var deactivationStats = memberRepository.getDeactivationStatistics(startDate);
-        System.out.println("deactivationStats = " + deactivationStats);
         var popularStack = memberRepository.findPopularStack(startDate, endDate);
-        System.out.println("popularStack = " + popularStack);
 
         return AnalyticsResponse.from(
                 memberStats.total(),
-                memberStats.increase(),
+                memberStats.change(),
                 appStats.total(),
-                appStats.increase(),
+                appStats.change(),
                 viewStats.total(),
-                viewStats.increase(),
+                viewStats.change(),
                 deactivationStats.total(),
                 deactivationStats.change(),
                 popularStack.toString()

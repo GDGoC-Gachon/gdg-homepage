@@ -21,6 +21,7 @@ public interface RegisterRepository extends JpaRepository<Register, Long> {
     // 신청서 수 통계
     @Query("""
         SELECT 
+            COUNT(r) as total,
             COUNT(CASE WHEN r.createdAt >= :startDate THEN 1 END) as current,
             COUNT(CASE WHEN r.createdAt < :startDate THEN 1 END) as previous
         FROM Register r

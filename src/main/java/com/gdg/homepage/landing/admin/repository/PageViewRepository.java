@@ -14,6 +14,7 @@ public interface PageViewRepository extends JpaRepository<PageView, Long> {
 
     @Query("""
 SELECT 
+    COUNT(p) as total,
     COUNT(CASE WHEN p.createdAt >= :startDate THEN 1 END) as current,
     COUNT(CASE WHEN p.createdAt < :startDate THEN 1 END) as previous
 FROM PageView p

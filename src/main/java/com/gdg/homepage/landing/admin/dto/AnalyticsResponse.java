@@ -21,7 +21,6 @@ public class AnalyticsResponse {
     private int pageView;       // 페이지 뷰 수
     private int pageViewIncrease; // 페이지 뷰 증가 수
 
-    private int deleteCount; // 탈퇴 회원 수
     private String popularStack;     // 인기 역할
 
     public static AnalyticsResponse from(
@@ -41,7 +40,7 @@ public class AnalyticsResponse {
                 .registerIncrease(Optional.ofNullable(registerIncrease).orElse(0))
                 .pageView(Optional.ofNullable(pageView).orElse(0))
                 .pageViewIncrease(Optional.ofNullable(pageViewIncrease).orElse((int) 0))
-                .deleteCount(Optional.ofNullable(deactivateMemberCount).orElse(0))
+                .deactivateMemberCount(Optional.ofNullable(deactivateMemberCount).orElse(0))
                 .deactivationsIncrease(Optional.ofNullable(deactivationIncrease).orElse(0))
                 .popularStack(popularStack)
                 .build();

@@ -37,6 +37,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 멤버 총계 가져오기 -> 이전 가입기간 대비 멤버가 된 사람의 증감
     @Query("""
                 SELECT 
+                    COUNT(m) as total,
                     COUNT(CASE WHEN m.createdAt >= :startOfPeriod THEN 1 END) as current,
                     COUNT(CASE WHEN m.createdAt < :startOfPeriod THEN 1 END) as previous
                 FROM Member m
@@ -46,6 +47,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 탈퇴 총계 가져오기
     @Query("""
                 SELECT
+                    COUNT(m) as total,
                     COUNT(CASE WHEN m.createdAt >= :startDate THEN 1 ELSE NULL END) as current,
                     COUNT(CASE WHEN m.createdAt < :startDate THEN 1 ELSE NULL END) as previous
                 FROM Member m
