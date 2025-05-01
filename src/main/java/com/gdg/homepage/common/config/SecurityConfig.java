@@ -27,11 +27,19 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // Swagger 접근 허용
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+
+                        // 기존 설정 유지
                         .requestMatchers("/", "/pageView/increment", "/api/v1/member/register", "/api/v1/member/login", "/api/v1/member/email", "/api/v1/member/email/verify").permitAll()
+                        .requestMatchers("/api/v1/register/**").permitAll()
                         .requestMatchers("/api/v1/member/**").hasAnyAuthority(
                                 MemberRole.MEMBER.getRole(), MemberRole.NON_MEMBER.getRole(),
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
-                        .requestMatchers("/api/v1/register/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority(
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
                         .anyRequest().authenticated()
