@@ -29,6 +29,6 @@ public interface AdminService {
     // 메인 페이지 조회 수 증가
     void incrementPageView();
 
-    // 페이지 조회 수 조회
-    Long getPageViewCount();
+    // 통계 가져오기
+    AnalyticsResponse collectStatistics();
 }

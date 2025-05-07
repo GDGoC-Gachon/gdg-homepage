@@ -12,7 +12,6 @@ import com.gdg.homepage.landing.register.service.RegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -67,29 +66,11 @@ public class AdminApi {
         }
     }
 
-
-    // 분석 페이지 -> 페이지 조회 수 확인
-    @GetMapping("/pageView/getPageViewCount")
-    public ApiResponse<Long> getPageViewCount() {
-        try{
-            Long pageViewCount=adminService.getPageViewCount();
-            return ApiResponse.ok(pageViewCount);
-        }catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // 분석 페이지
+    // 분석 대시보드 조회
     @GetMapping("/analytic")
-    public ApiResponse<AnalyticsResponse> getAnayltics() {
-
-        int total = memberAdminService.getTotalMembers() - 1; // 기본 오거나이저 계정은 카운트에서 삭제
-        long view = adminService.getPageViewCount();
-        long register = registerService.checkNowRegister(LocalDateTime.now());
-
-        return ApiResponse.ok(AnalyticsResponse.from(total, register, view, 0, "미정"));
+    public ApiResponse<AnalyticsResponse> getStatistics() {
+        return ApiResponse.ok(adminService.collectStatistics());
     }
-
-
 
 }
+
