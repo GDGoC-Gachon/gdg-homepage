@@ -31,7 +31,7 @@ public class RegisterServiceImpl implements RegisterService {
         LocalDateTime now = LocalDateTime.now();
         JoinPeriod period = adminService.checkJoinPeriod(now);
 
-        if (period.getStatus() ==false) {
+        if (!period.getStatus()) {
             throw new IllegalStateException("가입시간이 조기종료 되었습니다.");
         }
 

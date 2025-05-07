@@ -1,8 +1,5 @@
 package com.gdg.homepage.landing.register.domain;
 
-import java.util.Arrays;
-import java.util.List;
-
 public enum TechStack {
     // Frontend
     REACT,
@@ -52,7 +49,7 @@ public enum TechStack {
     MONGODB,
 
     // 기타
-    OTHER;
+    OTHER
 
     // TechField에 따른 TechStack 매칭
 //    public static List<TechStack> getStacksByField(TechField field) {
