@@ -20,7 +20,7 @@ public class RegisterController {
     private final RegisterService registerService;
 
     // 📌 회원 정보 수정 (Update)
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     public ApiResponse<RegisterResponse> updateRegister(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody RegisterRequest request) {
 
         RegisterResponse response = RegisterResponse.from(
