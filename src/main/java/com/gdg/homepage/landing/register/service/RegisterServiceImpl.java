@@ -31,7 +31,7 @@ public class RegisterServiceImpl implements RegisterService {
         LocalDateTime now = LocalDateTime.now();
         JoinPeriod period = adminService.checkJoinPeriod(now);
 
-        if (period.getStatus() ==false) {
+        if (!period.getStatus()) {
             throw new IllegalStateException("가입시간이 조기종료 되었습니다.");
         }
 
@@ -52,7 +52,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         // 기존 값과 새로운 값 비교하여 업데이트
         RegisterSnippet updatedSnippet = RegisterSnippet.of(
-                request.getGrade() != 0 ? request.getGrade() : existingSnippet.getGrade(),
+                request.getGrade() != null ? request.getGrade() : existingSnippet.getGrade(),
                 request.getStudentId() != null ? request.getStudentId() : existingSnippet.getStudentId(),
                 request.getMajor() != null ? request.getMajor() : existingSnippet.getMajor(),
                 request.getTechField() != null ? request.getTechField() : existingSnippet.getTechField(),

@@ -30,7 +30,7 @@ public class MemberAdminApi {
 
     // 멤버 상세 조회하기
     @GetMapping("/{id}")
-    public ApiResponse<MemberDetailResponse> getMemberDetail(@PathVariable Long id) {
+    public ApiResponse<MemberDetailResponse> getMemberDetail(@PathVariable("id") Long id) {
         return ApiResponse.ok(adminService.loadMember(id));
     }
 
