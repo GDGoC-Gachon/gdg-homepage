@@ -32,7 +32,7 @@ public interface MemberService {
     void requestPasswordChange(Long memberId) throws MessagingException;
 
     // 비밀번호 변경하기
-    void changePassword(Long memberId, String newPassword, String confirmPassword);
+    void changePassword(String token, Long memberId, String newPassword, String confirmPassword);
 
     // 탈퇴하기
     void deleteMember(Long memberId);
