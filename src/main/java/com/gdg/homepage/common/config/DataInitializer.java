@@ -49,7 +49,7 @@ public class DataInitializer {
             joinPeriodRepository.save(forAdmin);
 
             // Register 생성
-            RegisterSnippet snippet = RegisterSnippet.of(Grade.ORGANIZER, "가천어드민", "가천", List.of(TechField.OTHER), List.of(TechStack.OTHER));
+            RegisterSnippet snippet = RegisterSnippet.of(Grade.ORGANIZER, "가천어드민", "가천", List.of(TechField.OTHER), List.of(TechStack.OTHER), "");
 
             Register register = Register.of(forAdmin, snippet, Role.ORGANIZER);
             register.approve();
