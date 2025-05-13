@@ -28,10 +28,20 @@ public class RegisterRequest {
     @Schema(description = "전공", example = "인공지능학과")
     private String major;
 
-    @Schema(description = "관심분야", example = "{FRONT,BACK}")
+    @Schema(
+            description = "관심분야",
+            example = "[\"FRONT\", \"BACK\"]",
+            type = "array",
+            implementation = TechField.class
+    )
     private List<TechField> techField;
 
-    @Schema(description = "관심스택", example = "{SPRING_BOOT,KOTLIN}")
+    @Schema(
+            description = "관심스택",
+            example = "[\"SPRING_BOOT\", \"KOTLIN\"]",
+            type = "array",
+            implementation = TechStack.class
+    )
     private List<TechStack> techStack;
 
 
