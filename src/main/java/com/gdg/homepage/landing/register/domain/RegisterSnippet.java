@@ -15,8 +15,11 @@ import java.util.List;
 @Getter
 public class RegisterSnippet {
 
+    @Enumerated(EnumType.STRING)
     private Grade grade;
+
     private String studentId;
+
     private String major;
 
     @ElementCollection(fetch = FetchType.EAGER)

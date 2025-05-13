@@ -5,11 +5,7 @@ import com.gdg.homepage.landing.admin.repository.JoinPeriodRepository;
 import com.gdg.homepage.landing.member.domain.Member;
 import com.gdg.homepage.landing.member.domain.MemberRole;
 import com.gdg.homepage.landing.member.repository.MemberRepository;
-import com.gdg.homepage.landing.register.domain.Register;
-import com.gdg.homepage.landing.register.domain.RegisterSnippet;
-import com.gdg.homepage.landing.register.domain.Role;
-import com.gdg.homepage.landing.register.domain.TechField;
-import com.gdg.homepage.landing.register.domain.TechStack;
+import com.gdg.homepage.landing.register.domain.*;
 import com.gdg.homepage.landing.register.repository.RegisterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -52,7 +49,8 @@ public class DataInitializer {
             joinPeriodRepository.save(forAdmin);
 
             // Register 생성
-            RegisterSnippet snippet = RegisterSnippet.of(5, "가천어드민", "가천", TechField.OTHER, TechStack.OTHER);
+            RegisterSnippet snippet = RegisterSnippet.of(Grade.ORGANIZER, "가천어드민", "가천", List.of(TechField.OTHER), List.of(TechStack.OTHER));
+
             Register register = Register.of(forAdmin, snippet, Role.ORGANIZER);
             register.approve();
 

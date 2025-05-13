@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Slf4j
@@ -128,9 +129,23 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void changePassword(Long memberId, String newPassword, String confirmPassword) {
-        Member member = repository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
+    public void changePassword(String token, Long memberId, String newPassword, String confirmPassword) {
 
+        /// 토큰 맞는지 체크
+        ResetToken resetToken = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 토큰이 존재하지 않습니다."));
+
+        /// 유저 예외처리
+        Member member = repository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
+
+
+        /// 일치 여부 예외
+        if (!(resetToken.getMember().equals(member))) {
+            throw new IllegalStateException("토큰과 멤버가 일치하지 않습니다.");
+        }
+
+        /// 변경 예외
         if (!newPassword.equals(confirmPassword)) {
             throw new IllegalStateException("설정한 비밀번호가 서로 다릅니다.");
         }

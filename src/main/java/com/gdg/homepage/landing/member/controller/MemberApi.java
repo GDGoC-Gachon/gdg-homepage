@@ -74,7 +74,7 @@ public class MemberApi {
     @PutMapping("/reset-password")
     public ApiResponse<String> resetPassword(@RequestParam String token, @AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody MemberPasswordChangeRequest request) {
 
-        memberService.changePassword(memberDetails.getId(), request.getNewPassword(), request.getConfirmPassword());
+        memberService.changePassword(token, memberDetails.getId(), request.getNewPassword(), request.getConfirmPassword());
         return ApiResponse.ok("성공적으로 비밀번호가 변경되었습니다.");
     }
 
