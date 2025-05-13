@@ -34,20 +34,25 @@ public class RegisterSnippet {
     @Column(nullable = false)
     private List<TechStack> techStack;
 
+    private String other;
+
     // of() 메서드 대신 빌더 패턴으로 객체 생성
     public static RegisterSnippet of(
             Grade grade,
             String studentId,
             String major,
             List<TechField> techFields,
-            List<TechStack> techStacks
+            List<TechStack> techStacks,
+            String other
     ) {
+
         return RegisterSnippet.builder()
                 .grade(grade)
                 .studentId(studentId)
                 .major(major)
                 .techField(techFields)
                 .techStack(techStacks)
+                .other(other)
                 .build();
     }
 }

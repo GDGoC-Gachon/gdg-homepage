@@ -44,6 +44,7 @@ public class RegisterRequest {
     )
     private List<TechStack> techStack;
 
+    private String other;
 
 
 
