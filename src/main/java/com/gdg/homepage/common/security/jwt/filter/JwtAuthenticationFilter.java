@@ -91,8 +91,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
 
+        log.info("{}" + path);
+
         return path.equals("/") ||
+                path.startsWith("/static/") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-ui") ||
                 path.equals("/pageView/increment") ||
+                path.equals("/index.html") ||
+                path.equals("/favicon.ico") ||
                 path.equals("/api/v1/member/register") ||
                 path.equals("/api/v1/member/login") ||
                 path.equals("/api/v1/member/email") ||
