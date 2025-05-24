@@ -1,7 +1,8 @@
 package com.gdg.homepage.common.config;
 
-import com.gdg.homepage.common.security.jwt.filter.TokenAuthenticationFilter;
-import com.gdg.homepage.common.security.jwt.provider.JwtTokenProvider;
+import com.gdg.homepage.common.security.jwt.filter.JwtAccessDeniedHandler;
+import com.gdg.homepage.common.security.jwt.filter.JwtAuthenticationFailureHandler;
+import com.gdg.homepage.common.security.jwt.filter.JwtAuthenticationFilter;
 import com.gdg.homepage.landing.member.domain.MemberRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -27,11 +30,12 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Swagger 접근 허용
+                        // Swagger 및 에러 접근 허용
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/error"
                         ).permitAll()
 
                         // 기존 설정 유지
@@ -44,7 +48,12 @@ public class SecurityConfig {
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new TokenAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(
+                        excep -> excep
+                                .authenticationEntryPoint(jwtAuthenticationFailureHandler)
+                                .accessDeniedHandler(jwtAccessDeniedHandler)
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();

@@ -1,5 +1,6 @@
 package com.gdg.homepage.common.security.jwt.filter;
 
+import com.gdg.homepage.common.response.ErrorCode;
 import com.gdg.homepage.common.security.jwt.provider.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,21 +20,37 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TokenAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
+    private final JwtAuthenticationFailureHandler failureHandler;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = resolveToken(request);
 
-        if (accessToken != null && tokenProvider.validateToken(accessToken)) {
-            setAuthentication(accessToken);
-        } else {
+        try {
+            String accessToken = resolveToken(request);
+
+            if (accessToken == null) {
+                throw new JwtAuthenticationException(ErrorCode.UNAUTHORIZED.getMessage());
+            }
+
+            if (tokenProvider.validateToken(accessToken)) {
+               setAuthentication(accessToken);
+               filterChain.doFilter(request, response);
+            }
+            else {
+              throw new JwtAuthenticationException(ErrorCode.NOT_VALID.getMessage());
+            }
+
+        } catch (JwtAuthenticationException e) {
+            log.warn("JWT 인증 실패: {}", e.getMessage());
+            // 실패 핸들러 호출
+            failureHandler.commence(request, response, e);
+            return;
         }
 
-        filterChain.doFilter(request, response);
     }
 
 
@@ -69,5 +86,19 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         return null;
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+
+        return path.equals("/") ||
+                path.equals("/pageView/increment") ||
+                path.equals("/api/v1/member/register") ||
+                path.equals("/api/v1/member/login") ||
+                path.equals("/api/v1/member/email") ||
+                path.equals("/api/v1/member/email/verify") ||
+                path.startsWith("/api/v1/register/");
+    }
+
 
 }

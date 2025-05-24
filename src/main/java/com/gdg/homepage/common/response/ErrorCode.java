@@ -12,8 +12,11 @@ public enum ErrorCode {
     TEST_ERROR(100, HttpStatus.BAD_REQUEST, "테스트 에러입니다."),
     // 400 Bad Request
     BAD_REQUEST(400, HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    // 401
+    UNAUTHORIZED(401, HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
     // 403 Bad Reques
     Forbidden(403, HttpStatus.FORBIDDEN, "접속 권한이 없습니다."),
+    NOT_VALID(407, HttpStatus.BAD_REQUEST, "토큰이 적절하지않습니다."),
     // 404 Not Found
     NOT_FOUND_END_POINT(404, HttpStatus.NOT_FOUND, "요청한 대상이 존재하지 않습니다."),
     // 500 Internal Server Error
