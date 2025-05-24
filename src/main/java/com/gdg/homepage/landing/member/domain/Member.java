@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Member extends BaseTimeEntity implements UserDetails {
 
     @Id
@@ -44,6 +46,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private Integer passwordError;
 
+    private Boolean withDraw = false;
+
     /// 생성자
     public static Member of(String email, String password, String name, String phoneNumber, Register register) {
 
@@ -53,6 +57,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .register(register)
+                .withDraw(false)
+
                 .build();
 
         member.setRegister(register);

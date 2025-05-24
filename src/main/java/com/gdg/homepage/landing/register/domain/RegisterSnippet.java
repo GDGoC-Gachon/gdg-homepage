@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,26 +15,44 @@ import lombok.NoArgsConstructor;
 @Getter
 public class RegisterSnippet {
 
-    private int grade;
+    @Enumerated(EnumType.STRING)
+    private Grade grade;
+
     private String studentId;
+
     private String major;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "register_snippet_tech_field", joinColumns = @JoinColumn(name = "register_id"))
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TechField techField;
+    private List<TechField> techField;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "register_snippet_tech_stack", joinColumns = @JoinColumn(name = "register_id"))
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TechStack techStack;
+    private List<TechStack> techStack;
+
+    private String other;
 
     // of() 메서드 대신 빌더 패턴으로 객체 생성
-    public static RegisterSnippet of(int grade, String studentId, String major, TechField techField, TechStack techStack) {
+    public static RegisterSnippet of(
+            Grade grade,
+            String studentId,
+            String major,
+            List<TechField> techFields,
+            List<TechStack> techStacks,
+            String other
+    ) {
+
         return RegisterSnippet.builder()
                 .grade(grade)
                 .studentId(studentId)
                 .major(major)
-                .techField(techField)
-                .techStack(techStack)
+                .techField(techFields)
+                .techStack(techStacks)
+                .other(other)
                 .build();
     }
 }

@@ -26,5 +26,5 @@ public class ViewApi {
         adminService.incrementPageView();
         return ApiResponse.ok("조회수 증가");
     }
-
+  
 }

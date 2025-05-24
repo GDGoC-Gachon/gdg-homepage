@@ -22,14 +22,14 @@ public class RegisterController {
 
     private final RegisterService registerService;
 
+
     @Operation(
             summary = "회원 정보 수정",
             description = "로그인한 사용자의 회원 정보를 수정합니다."
     )
-    @PutMapping("/update/{id}")
-    public ApiResponse<RegisterResponse> updateRegister(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody RegisterRequest request) {
+
+    @PutMapping("/update")
+    public ApiResponse<RegisterResponse> updateRegister(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody RegisterRequest request) {
 
         RegisterResponse response = RegisterResponse.from(
                 registerService.updateRegister(customUserDetails.getId(), request));

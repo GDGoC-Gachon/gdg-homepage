@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -83,6 +82,7 @@ public class AdminApi {
         }
     }
 
+
     @Operation(
             summary = "페이지 조회 수 확인",
             description = "현재 페이지 조회 수를 반환합니다."
@@ -101,12 +101,12 @@ public class AdminApi {
             summary = "분석 페이지 데이터 조회",
             description = "회원 총수, 현재 등록자 수, 페이지 조회 수 등의 분석 데이터를 조회합니다."
     )
-    @GetMapping("/analytic")
-    public ApiResponse<AnalyticsResponse> getAnayltics() {
-        int total = memberAdminService.getTotalMembers() - 1; // 기본 오거나이저 계정 제외
-        long view = adminService.getPageViewCount();
-        long register = registerService.checkNowRegister(LocalDateTime.now());
 
-        return ApiResponse.ok(AnalyticsResponse.from(total, register, view, 0, "미정"));
+    // 분석 대시보드 조회
+    @GetMapping("/analytic")
+    public ApiResponse<AnalyticsResponse> getStatistics() {
+        return ApiResponse.ok(adminService.collectStatistics());
     }
+
 }
+

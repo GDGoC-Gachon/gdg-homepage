@@ -3,7 +3,6 @@ package com.gdg.homepage.landing.admin.dto;
 import com.gdg.homepage.landing.member.domain.Member;
 import com.gdg.homepage.landing.member.domain.MemberRole;
 import com.gdg.homepage.landing.register.domain.RegisterSnippet;
-import com.gdg.homepage.landing.register.domain.Role;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,7 +15,7 @@ public class MemberListResponse {
     private Long memberId;
     private String email;
     private String name;
-    private int grade;
+    private String grade;
     private String studentId;
     private String phoneNumber;
     private String role;
@@ -36,7 +35,7 @@ public class MemberListResponse {
                 .memberId(member.getId())
                 .email(member.getEmail())
                 .name(member.getName())
-                .grade(snippet.getGrade())
+                .grade(String.valueOf(snippet.getGrade()))
                 .studentId(snippet.getStudentId())
                 .phoneNumber(member.getPhoneNumber())
                 .role(role)
