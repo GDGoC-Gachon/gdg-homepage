@@ -10,7 +10,9 @@ public enum Grade {
     TWO(2),
     THREE(3),
     FOUR(4),
-    ORGANIZER(5);
+    FIVE(5),
+    GRADUATE(6),
+    ORGANIZER(7);
 
     private final int value;
 
