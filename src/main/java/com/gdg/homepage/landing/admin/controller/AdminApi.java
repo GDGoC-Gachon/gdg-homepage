@@ -23,8 +23,6 @@ import java.util.List;
 public class AdminApi {
 
     private final AdminServiceImpl adminService;
-    private final MemberAdminServiceImpl memberAdminService;
-    private final RegisterService registerService;
 
     @Operation(
             summary = "가입 일정 생성",
@@ -77,21 +75,6 @@ public class AdminApi {
         try {
             adminService.terminateJoinPeriod(id);
             return ApiResponse.ok("JoinPeriod is terminated.");
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    @Operation(
-            summary = "페이지 조회 수 확인",
-            description = "현재 페이지 조회 수를 반환합니다."
-    )
-    @GetMapping("/pageView/getPageViewCount")
-    public ApiResponse<Long> getPageViewCount() {
-        try {
-            Long pageViewCount = adminService.getPageViewCount();
-            return ApiResponse.ok(pageViewCount);
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
