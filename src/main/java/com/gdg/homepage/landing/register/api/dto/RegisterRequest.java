@@ -30,7 +30,7 @@ public class RegisterRequest {
 
     @Schema(
             description = "관심분야",
-            example = "[\"FRONT\", \"BACK\"]",
+            example = "[\"FRONT_END\", \"BACK_END\"]",
             type = "array",
             implementation = TechField.class
     )
