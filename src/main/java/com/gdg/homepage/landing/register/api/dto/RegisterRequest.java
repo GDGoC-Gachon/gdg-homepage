@@ -19,7 +19,7 @@ public class RegisterRequest {
     @Schema(description = "지원역할", example = "TEAM_MEMBER")
     private Role role;
 
-    @Schema(description = "학년", example = "ONE")
+    @Schema(description = "학년", example = "1")
     private Grade grade;
 
     @Schema(description = "학번", example = "202433444")
@@ -30,7 +30,7 @@ public class RegisterRequest {
 
     @Schema(
             description = "관심분야",
-            example = "[\"FRONT\", \"BACK\"]",
+            example = "[\"FRONT_END\", \"BACK_END\"]",
             type = "array",
             implementation = TechField.class
     )
