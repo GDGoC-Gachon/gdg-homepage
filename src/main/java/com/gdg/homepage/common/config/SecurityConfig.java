@@ -7,6 +7,7 @@ import com.gdg.homepage.landing.member.domain.MemberRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,6 +30,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
+                .cors(cors->{})
                 .authorizeHttpRequests(auth -> auth
                         // Swagger 및 에러 접근 허용
                         .requestMatchers(
@@ -47,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/member/**").hasAnyAuthority(
                                 MemberRole.MEMBER.getRole(), MemberRole.NON_MEMBER.getRole(),
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
+                        .requestMatchers(HttpMethod.OPTIONS, "/admin/**").permitAll() // OPTIONS 허용
                         .requestMatchers("/admin/**").hasAnyAuthority(
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
                         .anyRequest().authenticated()
