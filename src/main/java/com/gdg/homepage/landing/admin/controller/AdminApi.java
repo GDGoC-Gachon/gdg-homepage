@@ -7,10 +7,9 @@ import com.gdg.homepage.landing.admin.dto.AnalyticsResponse;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.dto.JoinPeriodResponse;
 import com.gdg.homepage.landing.admin.service.AdminServiceImpl;
-import com.gdg.homepage.landing.admin.service.MemberAdminServiceImpl;
-import com.gdg.homepage.landing.register.service.RegisterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +28,7 @@ public class AdminApi {
             description = "리크루팅에 대한 새로운 가입 일정을 생성합니다."
     )
     @PostMapping("/joinPeriod/create")
-    public ApiResponse<String> createJoinPeriod(@RequestBody JoinPeriodRequest joinPeriodRequest) {
+    public ApiResponse<String> createJoinPeriod(@RequestBody @Valid JoinPeriodRequest joinPeriodRequest) {
         try {
             adminService.createJoinPeriod(joinPeriodRequest);
             return ApiResponse.created("JoinPeriod is created.");
@@ -43,7 +42,7 @@ public class AdminApi {
             description = "특정 ID의 가입 일정을 수정합니다."
     )
     @PutMapping("/joinPeriod/update/{id}")
-    public ApiResponse<JoinPeriodResponse> updateJoinPeriod(@PathVariable("id") Long id, @RequestBody JoinPeriodRequest joinPeriodRequest) {
+    public ApiResponse<JoinPeriodResponse> updateJoinPeriod(@PathVariable("id") Long id,@Valid @RequestBody JoinPeriodRequest joinPeriodRequest) {
         try {
             JoinPeriodResponse responseDto = adminService.updateJoinPeriod(id, joinPeriodRequest);
             return ApiResponse.ok(responseDto);
