@@ -38,39 +38,48 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("""
                 SELECT 
                     COUNT(m) as total,
-                    COUNT(CASE WHEN m.createdAt >= :startOfPeriod THEN 1 END) as current,
-                    COUNT(CASE WHEN m.createdAt < :startOfPeriod THEN 1 END) as previous
+                    COUNT(CASE WHEN (:startDate IS NOT NULL AND m.createdAt >= :startDate) THEN 1 ELSE NULL END) as current,
+                    COUNT(CASE WHEN (:startDate IS NOT NULL AND m.createdAt < :startDate) THEN 1 ELSE NULL END) as previous
+            
                 FROM Member m
             """)
-    StatisticsProjection getMemberStatistics(@Param("startOfPeriod") LocalDateTime startOfPeriod);
+    StatisticsProjection getMemberStatistics(@Param("startDate") LocalDateTime startDate);
 
-    // 탈퇴 총계 가져오기
+    // 탈퇴
     @Query("""
                 SELECT
                     COUNT(m) as total,
-                    COUNT(CASE WHEN m.createdAt >= :startDate THEN 1 ELSE NULL END) as current,
-                    COUNT(CASE WHEN m.createdAt < :startDate THEN 1 ELSE NULL END) as previous
+                    COUNT(CASE WHEN (:startDate IS NOT NULL AND m.createdAt >= :startDate) THEN 1 ELSE NULL END) as current,
+                    COUNT(CASE WHEN (:startDate IS NOT NULL AND m.createdAt < :startDate) THEN 1 ELSE NULL END) as previous
+            
                 FROM Member m
                 WHERE m.withDraw = true
             """)
-    StatisticsProjection getDeactivationStatistics(@Param("startDate") LocalDateTime startOfPeriod);
+    StatisticsProjection getDeactivationStatistics(@Param("startDate") LocalDateTime startDate);
 
-    // 인기 스택 가져오기 (중복 제거)
+    // 인기 스택 조회
     @Query(value = """
-                SELECT r.tech_field
-                FROM register r
-                WHERE r.created_at BETWEEN :start AND :end
-                  AND r.tech_field IS NOT NULL
-                GROUP BY r.tech_field
-                HAVING COUNT(*) = (
-                    SELECT MAX(cnt) FROM (
-                        SELECT COUNT(*) AS cnt
-                        FROM register
-                        WHERE created_at BETWEEN :start AND :end
-                          AND tech_field IS NOT NULL
-                        GROUP BY tech_field
-                    ) AS sub
-                )
+            SELECT rst.tech_stack
+             FROM register r
+             JOIN register_snippet_tech_stack rst ON r.id = rst.register_id
+             WHERE (
+               (:start IS NULL AND :end IS NULL) OR
+               (r.created_at BETWEEN :start AND :end)
+             )
+             GROUP BY rst.tech_stack
+             HAVING COUNT(*) = (
+                 SELECT MAX(cnt) FROM (
+                     SELECT COUNT(*) AS cnt
+                     FROM register r2
+                     JOIN register_snippet_tech_stack rst2 ON r2.id = rst2.register_id
+                     WHERE (
+                       (:start IS NULL AND :end IS NULL) OR
+                       (r2.created_at BETWEEN :start AND :end)
+                     )
+                     GROUP BY rst2.tech_stack
+                 ) AS sub
+             )
             """, nativeQuery = true)
     List<String> findPopularStack(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
 }

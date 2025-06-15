@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -57,12 +58,17 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public JoinPeriodResponse updateJoinPeriod(Long id, JoinPeriodRequest joinPeriodRequest) {
-        //
-        JoinPeriod joinPeriod = joinPeriodRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_END_POINT));
-        // 요청 값이 존재하면 수정
-        if (joinPeriodRequest != null) {
-            joinPeriod.updateJoinPeriod(joinPeriodRequest);
+        LocalDateTime startDate = joinPeriodRequest.getStartDate();
+        LocalDateTime endDate = joinPeriodRequest.getEndDate();
+        boolean isOverlapping = joinPeriodRepository.periodExist(endDate, startDate);
+
+        if (isOverlapping) {
+            throw new IllegalArgumentException("해당 기간은 이미 존재하는 가입 기간과 겹칩니다.");
         }
+
+        JoinPeriod joinPeriod = joinPeriodRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_END_POINT));
+        joinPeriod.updateJoinPeriod(joinPeriodRequest);
+
         JoinPeriod updatedJoinPeriod = joinPeriodRepository.save(joinPeriod);
         return JoinPeriodResponse.from(updatedJoinPeriod);
     }
@@ -106,32 +112,40 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AnalyticsResponse collectStatistics() {
 
-        JoinPeriod joinPeriod = getCurrentJoinPeriod();
-        LocalDateTime startDate = joinPeriod.getStartDate();
-        LocalDateTime endDate = joinPeriod.getEndDate(); // 필요 시 사용
+        Optional<JoinPeriod> joinPeriodOpt =getCurrentJoinPeriod();
+        boolean hasJoinPeriod = joinPeriodOpt.isPresent();
+        LocalDateTime startDate = hasJoinPeriod ? joinPeriodOpt.get().getStartDate() : null;
+        LocalDateTime endDate = hasJoinPeriod ? joinPeriodOpt.get().getEndDate() : null;
 
+        // 총계는 항상 가져옴
         var memberStats = memberRepository.getMemberStatistics(startDate);
-        var appStats = registerRepository.getApplicationStatistics(startDate);
-        var viewStats = pageViewRepository.getPageViewStatistics(startDate);
+        var appStats = hasJoinPeriod ? registerRepository.getApplicationStatistics(startDate) : null;
+        var viewStats = hasJoinPeriod ? pageViewRepository.getPageViewStatistics(startDate) : null;
         var deactivationStats = memberRepository.getDeactivationStatistics(startDate);
+
+        // 인기 스택은 항상 조회
         var popularStack = memberRepository.findPopularStack(startDate, endDate);
 
         return AnalyticsResponse.from(
-                memberStats.total(),
-                memberStats.change(),
-                appStats.total(),
-                appStats.change(),
-                viewStats.total(),
-                viewStats.change(),
-                deactivationStats.total(),
-                deactivationStats.change(),
+                memberStats != null ? memberStats.total() : 0,
+                hasJoinPeriod ? memberStats.change() : null,
+
+                appStats != null ? appStats.total() : 0,
+                hasJoinPeriod ? appStats.change() : null,
+
+                viewStats != null ? viewStats.total() : 0,
+                hasJoinPeriod ? viewStats.change() : null,
+
+                deactivationStats != null ? deactivationStats.total() : 0,
+                hasJoinPeriod ? deactivationStats.change() : null,
+
                 popularStack.toString()
         );
     }
 
-    private JoinPeriod getCurrentJoinPeriod() {
-        return joinPeriodRepository.findCurrentJoinPeriod(LocalDateTime.now())
-                .orElseThrow(() -> new EntityNotFoundException("가입 기간을 찾을 수 없습니다."));
+
+    private Optional<JoinPeriod> getCurrentJoinPeriod() {
+        return joinPeriodRepository.findCurrentJoinPeriod(LocalDateTime.now());
     }
 
 
