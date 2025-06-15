@@ -2,11 +2,11 @@ package com.gdg.homepage.common.domain;
 
 public interface StatisticsProjection {
     int getCurrent();   // 기준일 이후 수치
-    int getPrevious();  // 기준일 이전 수치
-    int getTotal();
+    Integer getPrevious();  // 기준일 이전 수치
+    Integer getTotal();
 
     // "증가량": 현재 기간 동안 새로 늘어난 값
-    default int increase() {
+    default Integer increase() {
         return getCurrent();
     }
 
@@ -16,7 +16,7 @@ public interface StatisticsProjection {
     }
 
     // "증감": 전체 수의 증감 여부 판단 시 사용
-    default int change() {
+    default Integer change() {
         return getCurrent() - getPrevious();
     }
 }
