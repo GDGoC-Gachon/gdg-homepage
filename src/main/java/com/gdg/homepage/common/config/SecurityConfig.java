@@ -30,7 +30,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
-                .cors(cors->{})
+                .cors(cors -> {
+                })
                 .authorizeHttpRequests(auth -> auth
                         // Swagger 및 에러 접근 허용
                         .requestMatchers(
@@ -45,7 +46,7 @@ public class SecurityConfig {
 
                         // 기존 설정 유지
                         .requestMatchers("/", "/pageView/increment", "/api/v1/member/register", "/api/v1/member/login", "/api/v1/member/email", "/api/v1/member/email/verify").permitAll()
-                        .requestMatchers("/api/v1/register/**").permitAll()
+                        .requestMatchers("/api/v1/register/**", "/admin/faq/all").permitAll()
                         .requestMatchers("/api/v1/member/**").hasAnyAuthority(
                                 MemberRole.MEMBER.getRole(), MemberRole.NON_MEMBER.getRole(),
                                 MemberRole.TEAM_MEMBER.getRole(), MemberRole.ORGANIZER.getRole())
