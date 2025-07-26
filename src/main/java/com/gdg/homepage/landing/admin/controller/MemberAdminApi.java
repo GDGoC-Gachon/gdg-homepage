@@ -73,7 +73,7 @@ public class MemberAdminApi {
     public ApiResponse<String> rejectRole(@AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody @Valid MemberApprovalDecisionRequest request){
         request.setAdminId(memberDetails.getId());
         adminService.rejectMember(request);
-        return ApiResponse.created("승인 되었습니다.");
+        return ApiResponse.created("거절 되었습니다.");
     }
 
     @Operation(
