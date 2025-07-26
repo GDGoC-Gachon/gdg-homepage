@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @AllArgsConstructor
@@ -40,6 +42,8 @@ public class Register extends BaseTimeEntity {
 
     private boolean approved = false;
 
+    private LocalDateTime approvedAt;
+
 
     // 생성자
     public static Register of(JoinPeriod period, RegisterSnippet snippet ,Role registeredRole) {
@@ -56,6 +60,7 @@ public class Register extends BaseTimeEntity {
 
     public void approve() {
         this.approved = true;
+        this.approvedAt = LocalDateTime.now();
     }
 
     public void reject() {

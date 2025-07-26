@@ -31,6 +31,7 @@ public class MemberDetailResponse {
                 .major(snippet.getMajor())
                 .field(snippet.getTechField())
                 .stack(snippet.getTechStack())
+                .approvedAt(member.getRegister().getApprovedAt())
                 .build();
 
     }

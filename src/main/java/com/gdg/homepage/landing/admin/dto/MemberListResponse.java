@@ -6,6 +6,7 @@ import com.gdg.homepage.landing.register.domain.RegisterSnippet;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -20,6 +21,7 @@ public class MemberListResponse {
     private String phoneNumber;
     private MemberRole role;
     private boolean approved;
+    private LocalDateTime approvedAt;
 
     // from
     public static MemberListResponse from(Member member) {
@@ -41,6 +43,7 @@ public class MemberListResponse {
                 .phoneNumber(member.getPhoneNumber())
                 .role(role)
                 .approved(member.getRegister().isApproved())
+                .approvedAt(member.getRegister().getApprovedAt())
                 .build();
     }
     // from
