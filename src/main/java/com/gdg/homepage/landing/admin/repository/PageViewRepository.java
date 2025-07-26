@@ -13,11 +13,13 @@ public interface PageViewRepository extends JpaRepository<PageView, Long> {
     Long getPageViewCount();
 
     @Query("""
-SELECT 
-    COUNT(p) as total,
-    COUNT(CASE WHEN p.createdAt >= :startDate THEN 1 END) as current,
-    COUNT(CASE WHEN p.createdAt < :startDate THEN 1 END) as previous
+
+            SELECT 
+    COALESCE(SUM(p.viewCount), 0) AS total,
+    COALESCE(SUM(CASE WHEN p.createdAt >= :startDate THEN p.viewCount ELSE 0 END), 0) AS current,
+    COALESCE(SUM(CASE WHEN p.createdAt < :startDate THEN p.viewCount ELSE 0 END), 0) AS previous
 FROM PageView p
 """)
     StatisticsProjection getPageViewStatistics(@Param("startDate") LocalDateTime startOfPeriod);
+
 }
