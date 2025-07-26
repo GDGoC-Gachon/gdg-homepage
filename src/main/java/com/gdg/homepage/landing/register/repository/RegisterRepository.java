@@ -1,6 +1,7 @@
 package com.gdg.homepage.landing.register.repository;
 
 import com.gdg.homepage.common.domain.StatisticsProjection;
+import com.gdg.homepage.landing.member.domain.Member;
 import com.gdg.homepage.landing.register.domain.Register;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,5 @@ public interface RegisterRepository extends JpaRepository<Register, Long> {
         """)
     StatisticsProjection getApplicationStatistics(@Param("startDate") LocalDateTime startOfPeriod);
 
+    void deleteByMember(Member member);
 }

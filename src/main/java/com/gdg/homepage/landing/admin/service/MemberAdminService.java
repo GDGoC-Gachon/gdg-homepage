@@ -3,7 +3,7 @@ package com.gdg.homepage.landing.admin.service;
 
 import com.gdg.homepage.common.response.page.PageRequest;
 import com.gdg.homepage.common.response.page.PageResponse;
-import com.gdg.homepage.landing.admin.dto.MemberApproveRequest;
+import com.gdg.homepage.landing.admin.dto.MemberApprovalDecisionRequest;
 import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.admin.dto.MemberListResponse;
 import com.gdg.homepage.landing.admin.dto.MemberUpgradeRequest;
@@ -35,7 +35,9 @@ public interface MemberAdminService {
     int getTotalMembers();
 
     // 승인하기
-    void approveMember(MemberApproveRequest request);
+    void approveMember(MemberApprovalDecisionRequest request);
+
+    void rejectMember(MemberApprovalDecisionRequest request);
 
     // 회원 탈퇴 시키기
     void removeMember(Long memberId);

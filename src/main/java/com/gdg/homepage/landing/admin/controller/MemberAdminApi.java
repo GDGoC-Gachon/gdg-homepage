@@ -3,7 +3,7 @@ package com.gdg.homepage.landing.admin.controller;
 import com.gdg.homepage.common.response.ApiResponse;
 import com.gdg.homepage.common.response.page.PageRequest;
 import com.gdg.homepage.common.response.page.PageResponse;
-import com.gdg.homepage.landing.admin.dto.MemberApproveRequest;
+import com.gdg.homepage.landing.admin.dto.MemberApprovalDecisionRequest;
 import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.admin.dto.MemberListResponse;
 import com.gdg.homepage.landing.admin.dto.MemberUpgradeRequest;
@@ -59,10 +59,21 @@ public class MemberAdminApi {
             description = "관리자가 멤버를 승인합니다."
     )
     @PutMapping("/approve")
-    public ApiResponse<String> approveRole(@AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody @Valid MemberApproveRequest request){
+    public ApiResponse<String> approveRole(@AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody @Valid MemberApprovalDecisionRequest request){
         request.setAdminId(memberDetails.getId());
         adminService.approveMember(request);
         return ApiResponse.created("승인 되었습니다.");
+    }
+
+    @Operation(
+            summary = "멤버 거절",
+            description = "관리자가 멤버를 거절하고 DB에서 삭제합니다."
+    )
+    @PutMapping("/reject")
+    public ApiResponse<String> rejectRole(@AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody @Valid MemberApprovalDecisionRequest request){
+        request.setAdminId(memberDetails.getId());
+        adminService.rejectMember(request);
+        return ApiResponse.created("거절 되었습니다.");
     }
 
     @Operation(

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class MemberApproveRequest {
+public class MemberApprovalDecisionRequest {
 
     private Long adminId;
 

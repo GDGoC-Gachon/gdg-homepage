@@ -6,6 +6,7 @@ import com.gdg.homepage.landing.register.domain.RegisterSnippet;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -15,34 +16,36 @@ public class MemberListResponse {
     private Long memberId;
     private String email;
     private String name;
-    private String grade;
+    private int grade;
     private String studentId;
     private String phoneNumber;
-    private String role;
+    private MemberRole role;
     private boolean approved;
+    private LocalDateTime approvedAt;
 
     // from
     public static MemberListResponse from(Member member) {
 
         RegisterSnippet snippet = member.getRegister().getSnippet();
 
-        String role = String.valueOf(member.getRole());
+        MemberRole role = member.getRole();
 
         if (member.getRole().equals(MemberRole.NON_MEMBER)){
-            role = String.valueOf(member.getRegister().getRegisteredRole());
+            role = member.getRegister().getRegisteredRole().toMemberRole();
         }
+
         return MemberListResponse.builder()
                 .memberId(member.getId())
                 .email(member.getEmail())
                 .name(member.getName())
-                .grade(String.valueOf(snippet.getGrade()))
+                .grade(snippet.getGrade().getValue())
                 .studentId(snippet.getStudentId())
                 .phoneNumber(member.getPhoneNumber())
                 .role(role)
                 .approved(member.getRegister().isApproved())
+                .approvedAt(member.getRegister().getApprovedAt())
                 .build();
     }
-
     // from
     public static List<MemberListResponse> from(List<Member> members) {
 

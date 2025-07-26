@@ -1,5 +1,6 @@
 package com.gdg.homepage.landing.register.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -16,4 +17,8 @@ public enum Grade {
 
     private final int value;
 
+    @JsonIgnore
+    public int getValue() {
+        return value;
+    }
 }
