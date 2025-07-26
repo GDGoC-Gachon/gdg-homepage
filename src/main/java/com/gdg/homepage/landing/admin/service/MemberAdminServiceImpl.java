@@ -2,12 +2,13 @@ package com.gdg.homepage.landing.admin.service;
 
 import com.gdg.homepage.common.response.page.PageRequest;
 import com.gdg.homepage.common.response.page.PageResponse;
-import com.gdg.homepage.landing.admin.dto.MemberApproveRequest;
+import com.gdg.homepage.landing.admin.dto.MemberApprovalDecisionRequest;
 import com.gdg.homepage.landing.member.domain.Member;
 import com.gdg.homepage.landing.admin.dto.MemberDetailResponse;
 import com.gdg.homepage.landing.admin.dto.MemberListResponse;
 import com.gdg.homepage.landing.admin.dto.MemberUpgradeRequest;
 import com.gdg.homepage.landing.member.repository.MemberRepository;
+import com.gdg.homepage.landing.register.repository.RegisterRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import java.util.List;
 public class MemberAdminServiceImpl implements MemberAdminService {
 
     private final MemberRepository repository;
+    private final RegisterRepository registerRepository;
 
     @Override
     public PageResponse<MemberListResponse> findAll(PageRequest pageRequest) {
@@ -81,7 +83,7 @@ public class MemberAdminServiceImpl implements MemberAdminService {
     }
 
     @Override
-    public void approveMember(MemberApproveRequest request) {
+    public void approveMember(MemberApprovalDecisionRequest request) {
         Member admin = repository.findById(request.getAdminId())
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 어드민이 존재하지 않습니다."));
 
@@ -93,6 +95,24 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 
         // 역할 변경
         member.changeRole(admin, member);
+    }
+
+    @Override
+    public void rejectMember(MemberApprovalDecisionRequest request) {
+
+        Member admin = repository.findById(request.getAdminId())
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 어드민이 존재하지 않습니다."));
+
+        Member member = repository.findById(request.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("승인할 멤버가 존재하지 않습니다."));
+
+        // 승인
+        member.getRegister().reject();
+
+        // 삭제 처리 ?
+        repository.delete(member);
+        registerRepository.deleteByMember(member);
+
     }
 
     @Override

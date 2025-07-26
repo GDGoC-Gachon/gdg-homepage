@@ -58,6 +58,10 @@ public class Register extends BaseTimeEntity {
         this.approved = true;
     }
 
+    public void reject() {
+        this.approved = false;
+    }
+
 
     // 수정 필요
     public void updateSnippet(RegisterSnippet snippet) {
