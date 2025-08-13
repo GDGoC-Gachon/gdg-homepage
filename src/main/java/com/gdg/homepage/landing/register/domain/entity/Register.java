@@ -1,0 +1,75 @@
+package com.gdg.homepage.landing.register.domain.entity;
+
+import com.gdg.homepage.core.domain.BaseTimeEntity;
+import com.gdg.homepage.landing.admin.domain.domain.JoinPeriod;
+import com.gdg.homepage.landing.member.domain.entity.Member;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+
+
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
+@EntityListeners(AuditingEntityListener.class)
+public class Register extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "period_id")
+    private JoinPeriod period;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role registeredRole;
+
+    @Embedded
+    private RegisterSnippet snippet;
+
+    private boolean approved = false;
+
+    private LocalDateTime approvedAt;
+
+
+    // 생성자
+    public static Register of(JoinPeriod period, RegisterSnippet snippet ,Role registeredRole) {
+        return Register.builder()
+                .period(period)
+                .snippet(snippet)
+                .registeredRole(registeredRole)
+                .build();
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void approve() {
+        this.approved = true;
+        this.approvedAt = LocalDateTime.now();
+    }
+
+    public void reject() {
+        this.approved = false;
+    }
+
+
+    // 수정 필요
+    public void updateSnippet(RegisterSnippet snippet) {
+        this.snippet = snippet;
+    }
+}
