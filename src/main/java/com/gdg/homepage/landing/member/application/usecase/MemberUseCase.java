@@ -16,16 +16,6 @@ import jakarta.mail.MessagingException;
 public interface MemberUseCase {
 
     /**
-     * JWT 기반 로그인을 처리합니다.
-     */
-    MemberLoginResponse login(MemberLoginRequest request);
-
-    /**
-     * 로그아웃을 처리합니다.<br>
-     */
-    void logout();
-
-    /**
      * 내(요청 유저)의 회원 정보를 조회합니다.
      */
     MemberDetailResponse loadMyMember(Long memberId);

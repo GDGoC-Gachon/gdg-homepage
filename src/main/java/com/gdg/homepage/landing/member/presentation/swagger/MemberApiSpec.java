@@ -5,7 +5,7 @@ import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailRespo
 import com.gdg.homepage.landing.member.application.dto.request.MemberLoginRequest;
 import com.gdg.homepage.landing.member.application.dto.request.MemberPasswordChangeRequest;
 import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
-import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
+import com.gdg.homepage.security.jwt.domain.entity.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
@@ -15,19 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "멤버 API", description = "회원가입 이후, 승인이 된 멤버가 사용하는 API 입니다.")
 public interface MemberApiSpec {
-
-    @Operation(
-            summary = "로그인",
-            description = "로그인을 처리합니다."
-    )
-    ApiResponse<MemberLoginResponse> login(@RequestBody MemberLoginRequest request);
-
-
-    @Operation(
-            summary = "로그아웃",
-            description = "로그아웃을 처리합니다."
-    )
-    ApiResponse<String> logout();
 
     @Operation(
             summary = "마이페이지 조회",

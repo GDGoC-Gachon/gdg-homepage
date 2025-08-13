@@ -2,12 +2,10 @@ package com.gdg.homepage.landing.member.presentation;
 
 import com.gdg.homepage.core.response.ApiResponse;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailResponse;
-import com.gdg.homepage.landing.member.application.dto.request.MemberLoginRequest;
 import com.gdg.homepage.landing.member.application.dto.request.MemberPasswordChangeRequest;
-import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
 import com.gdg.homepage.landing.member.application.usecase.MemberUseCase;
 import com.gdg.homepage.landing.member.presentation.swagger.MemberApiSpec;
-import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
+import com.gdg.homepage.security.jwt.domain.entity.CustomUserDetails;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,25 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class MemberApi implements MemberApiSpec {
 
     private final MemberUseCase memberService;
-
-    @PostMapping("/login")
-    public ApiResponse<MemberLoginResponse> login(@RequestBody MemberLoginRequest request) {
-
-        /// 서비스 호출
-        MemberLoginResponse login = memberService.login(request);
-
-        return ApiResponse.created(login);
-    }
-
-    @PostMapping("/logout")
-    public ApiResponse<String> logout() {
-
-        /// 서비스 호출
-        memberService.logout();
-
-        /// 리턴
-        return ApiResponse.ok("성공적으로 로그아웃 되었습니다.");
-    }
 
     @GetMapping("/myPage")
     public ApiResponse<MemberDetailResponse> myPage(@AuthenticationPrincipal CustomUserDetails memberDetails) {
