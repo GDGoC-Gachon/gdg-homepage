@@ -5,7 +5,7 @@ import com.gdg.homepage.landing.register.domain.entity.Register;
 
 import java.time.LocalDateTime;
 
-public interface RegisterService {
+public interface RegisterUseCase {
 
     // 회원 생성과 함께 사용할 내부 메서드
     Register createRegister(RegisterRequest request);

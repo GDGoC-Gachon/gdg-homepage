@@ -5,7 +5,6 @@ import com.gdg.homepage.core.response.CustomException;
 import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.faq.application.dto.request.FAQRequest;
 import com.gdg.homepage.landing.faq.application.dto.response.FAQResponse;
-import com.gdg.homepage.landing.faq.application.service.FAQServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FAQApi {
 
-    private final FAQServiceImpl FAQService;
+    private final com.gdg.homepage.landing.faq.application.service.FAQService FAQService;
 
     @Operation(
             summary = "FAQ 생성",

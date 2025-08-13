@@ -4,7 +4,7 @@ import com.gdg.homepage.core.response.CustomException;
 import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.faq.application.dto.request.FAQRequest;
 import com.gdg.homepage.landing.faq.application.dto.response.FAQResponse;
-import com.gdg.homepage.landing.faq.application.usecase.FAQService;
+import com.gdg.homepage.landing.faq.application.usecase.FAQUseCase;
 import com.gdg.homepage.landing.faq.domain.entity.FAQ;
 import com.gdg.homepage.landing.faq.domain.repository.FAQRepository;
 import jakarta.transaction.Transactional;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class FAQServiceImpl implements FAQService {
+public class FAQService implements FAQUseCase {
 
     private final FAQRepository faqRepository;
 

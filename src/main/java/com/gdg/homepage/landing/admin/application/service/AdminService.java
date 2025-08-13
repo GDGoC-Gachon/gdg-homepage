@@ -2,7 +2,7 @@ package com.gdg.homepage.landing.admin.application.service;
 
 import com.gdg.homepage.core.response.CustomException;
 import com.gdg.homepage.core.response.ErrorCode;
-import com.gdg.homepage.landing.admin.application.usecase.AdminService;
+import com.gdg.homepage.landing.admin.application.usecase.AdminUseCase;
 import com.gdg.homepage.landing.admin.domain.domain.JoinPeriod;
 import com.gdg.homepage.landing.admin.domain.domain.PageView;
 import com.gdg.homepage.landing.admin.application.dto.response.AnalyticsResponse;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class AdminServiceImpl implements AdminService {
+public class AdminService implements AdminUseCase {
 
     private final JoinPeriodRepository joinPeriodRepository;
     private final PageViewRepository pageViewRepository;

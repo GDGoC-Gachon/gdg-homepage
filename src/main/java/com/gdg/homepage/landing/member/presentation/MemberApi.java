@@ -9,8 +9,8 @@ import com.gdg.homepage.landing.member.application.dto.request.MemberRegisterWra
 import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
 import com.gdg.homepage.landing.member.application.dto.request.EmailVerifyRequest;
 import com.gdg.homepage.landing.member.application.exception.NotVerifiedException;
-import com.gdg.homepage.landing.member.application.usecase.EmailService;
-import com.gdg.homepage.landing.member.application.usecase.MemberService;
+import com.gdg.homepage.landing.member.application.usecase.EmailUseCase;
+import com.gdg.homepage.landing.member.application.usecase.MemberUseCase;
 import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 )
 public class MemberApi {
 
-    private final MemberService memberService;
-    private final EmailService emailService;
+    private final MemberUseCase memberService;
+    private final EmailUseCase emailService;
 
     @PostMapping("/email")
     @Operation(

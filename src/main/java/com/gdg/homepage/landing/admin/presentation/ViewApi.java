@@ -1,7 +1,7 @@
 package com.gdg.homepage.landing.admin.presentation;
 
 import com.gdg.homepage.core.response.ApiResponse;
-import com.gdg.homepage.landing.admin.application.service.AdminServiceImpl;
+import com.gdg.homepage.landing.admin.application.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
         name = "View API", description = "관리자 화면 제공 API")
 public class ViewApi {
 
-    private final AdminServiceImpl adminService;
+    private final AdminService adminService;
 
     //  페이지 조회 수 증가
     @Operation(

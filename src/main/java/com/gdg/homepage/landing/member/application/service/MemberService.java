@@ -4,8 +4,8 @@ import com.gdg.homepage.landing.member.application.dto.request.MemberLoginReques
 import com.gdg.homepage.landing.member.application.dto.request.MemberRegisterRequest;
 import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
 import com.gdg.homepage.landing.member.application.dto.response.MemberRegisterResponse;
-import com.gdg.homepage.landing.member.application.usecase.EmailService;
-import com.gdg.homepage.landing.member.application.usecase.MemberService;
+import com.gdg.homepage.landing.member.application.usecase.EmailUseCase;
+import com.gdg.homepage.landing.member.application.usecase.MemberUseCase;
 import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
 import com.gdg.homepage.security.jwt.provider.JwtTokenProvider;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailResponse;
@@ -15,7 +15,7 @@ import com.gdg.homepage.landing.member.domain.repository.MemberRepository;
 import com.gdg.homepage.landing.member.domain.repository.ResetTokenRepository;
 import com.gdg.homepage.landing.register.application.dto.request.RegisterRequest;
 import com.gdg.homepage.landing.register.domain.entity.Register;
-import com.gdg.homepage.landing.register.application.usecase.RegisterService;
+import com.gdg.homepage.landing.register.application.usecase.RegisterUseCase;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ import java.util.UUID;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class MemberService implements MemberUseCase {
 
     private final MemberRepository repository;
     private final ResetTokenRepository tokenRepository;
@@ -46,8 +46,8 @@ public class MemberServiceImpl implements MemberService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final JwtTokenProvider tokenProvider;
-    private final RegisterService registerService;
-    private final EmailService emailService;
+    private final RegisterUseCase registerService;
+    private final EmailUseCase emailService;
 
     /// 비즈니스 로직 처리
     @Override

@@ -8,7 +8,7 @@ import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailRespo
 import com.gdg.homepage.landing.admin.application.dto.response.MemberListResponse;
 import com.gdg.homepage.landing.admin.application.dto.request.MemberUpgradeRequest;
 
-public interface MemberAdminService {
+public interface MemberAdminUseCase {
     /*
         회원 목록 조회 (승인)
         회원 목록 조회 (승인 대기중)

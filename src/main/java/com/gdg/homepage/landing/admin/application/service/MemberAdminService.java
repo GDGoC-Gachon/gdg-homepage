@@ -3,7 +3,7 @@ package com.gdg.homepage.landing.admin.application.service;
 import com.gdg.homepage.core.response.page.PageRequest;
 import com.gdg.homepage.core.response.page.PageResponse;
 import com.gdg.homepage.landing.admin.application.dto.request.MemberApprovalDecisionRequest;
-import com.gdg.homepage.landing.admin.application.usecase.MemberAdminService;
+import com.gdg.homepage.landing.admin.application.usecase.MemberAdminUseCase;
 import com.gdg.homepage.landing.member.domain.entity.Member;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailResponse;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberListResponse;
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberAdminServiceImpl implements MemberAdminService {
+public class MemberAdminService implements MemberAdminUseCase {
 
     private final MemberRepository repository;
     private final RegisterRepository registerRepository;

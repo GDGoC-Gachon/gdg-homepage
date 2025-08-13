@@ -1,9 +1,9 @@
 package com.gdg.homepage.landing.register.application.service;
 
 import com.gdg.homepage.landing.admin.domain.domain.JoinPeriod;
-import com.gdg.homepage.landing.admin.application.usecase.AdminService;
+import com.gdg.homepage.landing.admin.application.usecase.AdminUseCase;
 import com.gdg.homepage.landing.register.application.dto.request.RegisterRequest;
-import com.gdg.homepage.landing.register.application.usecase.RegisterService;
+import com.gdg.homepage.landing.register.application.usecase.RegisterUseCase;
 import com.gdg.homepage.landing.register.domain.entity.Register;
 import com.gdg.homepage.landing.register.domain.entity.RegisterSnippet;
 import com.gdg.homepage.landing.register.domain.repository.RegisterRepository;
@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class RegisterServiceImpl implements RegisterService {
+public class RegisterService implements RegisterUseCase {
 
     private final RegisterRepository registerRepository;
-    private final AdminService adminService;
+    private final AdminUseCase adminService;
 
     /*
         지원서 생성은 회원가입과 동일하게 이루어지기에

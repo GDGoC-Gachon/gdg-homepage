@@ -8,7 +8,7 @@ import com.gdg.homepage.landing.admin.domain.domain.JoinPeriod;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface AdminService {
+public interface AdminUseCase {
     // ** 가입 ***
     // 가입 일정 생성
     void createJoinPeriod(JoinPeriodRequest joinPeriodRequest);

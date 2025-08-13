@@ -5,7 +5,7 @@ import com.gdg.homepage.landing.faq.application.dto.response.FAQResponse;
 
 import java.util.List;
 
-public interface FAQService {
+public interface FAQUseCase {
     // FAQ 생성
     FAQResponse createFAQ(FAQRequest faqRequest);
 

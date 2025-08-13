@@ -1,6 +1,6 @@
 package com.gdg.homepage.landing.member.application.service;
 
-import com.gdg.homepage.landing.member.application.usecase.EmailService;
+import com.gdg.homepage.landing.member.application.usecase.EmailUseCase;
 import com.gdg.homepage.landing.member.application.exception.NotVerifiedException;
 import com.gdg.homepage.landing.member.domain.entity.VerificationCode;
 import com.gdg.homepage.landing.member.domain.repository.EmailRepository;
@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService {
+public class EmailService implements EmailUseCase {
 
     private final JavaMailSender emailSender;
     private final EmailRepository emailRepository;

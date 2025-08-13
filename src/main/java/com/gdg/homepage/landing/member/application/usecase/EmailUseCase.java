@@ -2,7 +2,7 @@ package com.gdg.homepage.landing.member.application.usecase;
 
 import jakarta.mail.MessagingException;
 
-public interface EmailService {
+public interface EmailUseCase {
     /*
         회원가입 할 때, 인증 서비스
         비밀번호 변경 서비스

@@ -8,7 +8,7 @@ import com.gdg.homepage.landing.member.application.dto.response.MemberRegisterRe
 import com.gdg.homepage.landing.register.application.dto.request.RegisterRequest;
 import jakarta.mail.MessagingException;
 
-public interface MemberService {
+public interface MemberUseCase {
 
     /*
         회원가입

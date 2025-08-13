@@ -7,7 +7,7 @@ import com.gdg.homepage.landing.admin.application.dto.request.MemberApprovalDeci
 import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailResponse;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberListResponse;
 import com.gdg.homepage.landing.admin.application.dto.request.MemberUpgradeRequest;
-import com.gdg.homepage.landing.admin.application.usecase.MemberAdminService;
+import com.gdg.homepage.landing.admin.application.usecase.MemberAdminUseCase;
 import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 )
 public class MemberAdminApi {
 
-    private final MemberAdminService adminService;
+    private final MemberAdminUseCase adminService;
 
     @Operation(
             summary = "승인된 멤버 목록 조회",

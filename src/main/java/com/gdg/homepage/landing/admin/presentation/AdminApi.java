@@ -6,7 +6,7 @@ import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.admin.application.dto.response.AnalyticsResponse;
 import com.gdg.homepage.landing.admin.application.dto.request.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.application.dto.response.JoinPeriodResponse;
-import com.gdg.homepage.landing.admin.application.service.AdminServiceImpl;
+import com.gdg.homepage.landing.admin.application.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -21,7 +21,7 @@ import java.util.List;
 @Tag(name = "Admin API", description = "관리자 관련 API")
 public class AdminApi {
 
-    private final AdminServiceImpl adminService;
+    private final AdminService adminService;
 
     @Operation(
             summary = "가입 일정 생성",
