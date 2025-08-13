@@ -4,6 +4,7 @@ import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.member.application.dto.request.MemberLoginRequest;
 import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
 import com.gdg.homepage.landing.member.domain.entity.Member;
+import com.gdg.homepage.landing.member.domain.entity.MemberRole;
 import com.gdg.homepage.security.jwt.application.usecase.AuthUseCase;
 import com.gdg.homepage.security.jwt.application.usecase.JwtTokenUseCase;
 import com.gdg.homepage.security.jwt.domain.entity.CustomUserDetails;
@@ -46,6 +47,11 @@ public class AuthService implements AuthUseCase {
         if (!bCryptPasswordEncoder.matches(request.getPassword(), member.getPassword())) {
             repository.save(member);
             throw new BadCredentialsException(ErrorCode.PASSWORD_ERROR.getMessage());
+        }
+
+        /// 만약 승인받지 않은 유저라면 예외처리
+        if (member.getRole().equals(MemberRole.NON_MEMBER)){
+            throw new BadCredentialsException(ErrorCode.NON_MEMBER_LOGIN.getMessage());
         }
 
         /// 시큐리티에 저장할 객체

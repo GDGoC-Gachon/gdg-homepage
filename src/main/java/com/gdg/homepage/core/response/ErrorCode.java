@@ -23,6 +23,7 @@ public enum ErrorCode {
     PASSWORD_ERROR(400_011, HttpStatus.BAD_REQUEST, "비밀번호가 틀렸습니다."),
     TOKEN_MEMBER_MISMATCH(400_012, HttpStatus.BAD_REQUEST, "토큰과 멤버가 일치하지 않습니다."),
     PASSWORD_MISMATCH(400_013, HttpStatus.BAD_REQUEST, "설정한 비밀번호가 서로 다릅니다."),
+    NON_MEMBER_LOGIN(400_014, HttpStatus.BAD_REQUEST, "승인받지못한 유저는 로그인할 수 없습니다."),
     INVALID_VERIFICATION_CODE(400_020, HttpStatus.BAD_REQUEST, "유효하지 않거나 만료된 코드입니다."),
     JOIN_PERIOD_OVERLAP(400_030, HttpStatus.BAD_REQUEST, "해당 기간은 이미 존재하는 가입 기간과 겹칩니다."),
 
