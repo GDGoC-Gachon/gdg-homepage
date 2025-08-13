@@ -1,6 +1,6 @@
 package com.gdg.homepage.landing.admin.domain.domain;
 
-import com.gdg.homepage.core.domain.BaseTimeEntity;
+import com.gdg.homepage.landing.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

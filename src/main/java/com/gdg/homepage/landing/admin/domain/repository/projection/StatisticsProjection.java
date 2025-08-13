@@ -1,4 +1,4 @@
-package com.gdg.homepage.core.domain;
+package com.gdg.homepage.landing.admin.domain.repository.projection;
 
 public interface StatisticsProjection {
     Integer getTotal();

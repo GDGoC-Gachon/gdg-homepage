@@ -1,6 +1,6 @@
 package com.gdg.homepage.landing.faq.domain.entity;
 
-import com.gdg.homepage.core.domain.BaseTimeEntity;
+import com.gdg.homepage.landing.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

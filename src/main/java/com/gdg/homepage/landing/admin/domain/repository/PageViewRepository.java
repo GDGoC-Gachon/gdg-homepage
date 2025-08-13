@@ -1,6 +1,6 @@
 package com.gdg.homepage.landing.admin.domain.repository;
 
-import com.gdg.homepage.core.domain.StatisticsProjection;
+import com.gdg.homepage.landing.admin.domain.repository.projection.StatisticsProjection;
 import com.gdg.homepage.landing.admin.domain.domain.PageView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

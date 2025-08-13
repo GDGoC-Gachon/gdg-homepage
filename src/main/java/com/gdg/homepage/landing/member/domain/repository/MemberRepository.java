@@ -1,6 +1,6 @@
 package com.gdg.homepage.landing.member.domain.repository;
 
-import com.gdg.homepage.core.domain.StatisticsProjection;
+import com.gdg.homepage.landing.admin.domain.repository.projection.StatisticsProjection;
 import com.gdg.homepage.landing.member.domain.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

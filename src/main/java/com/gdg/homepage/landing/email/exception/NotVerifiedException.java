@@ -1,4 +1,4 @@
-package com.gdg.homepage.landing.member.application.exception;
+package com.gdg.homepage.landing.email.exception;
 
 public class NotVerifiedException extends RuntimeException {
 

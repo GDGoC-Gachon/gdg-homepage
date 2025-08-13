@@ -1,4 +1,4 @@
-package com.gdg.homepage.core.domain;
+package com.gdg.homepage.landing;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

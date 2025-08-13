@@ -4,7 +4,7 @@ import com.gdg.homepage.landing.member.application.dto.request.MemberLoginReques
 import com.gdg.homepage.landing.member.application.dto.request.MemberRegisterRequest;
 import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
 import com.gdg.homepage.landing.member.application.dto.response.MemberRegisterResponse;
-import com.gdg.homepage.landing.member.application.usecase.EmailUseCase;
+import com.gdg.homepage.landing.email.application.usecase.EmailUseCase;
 import com.gdg.homepage.landing.member.application.usecase.MemberUseCase;
 import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
 import com.gdg.homepage.security.jwt.provider.JwtTokenProvider;
