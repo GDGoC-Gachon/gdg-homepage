@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@Tag(name = "FAQ 관리 API", description = "관리자용 FAQ 생성, 수정, 삭제 및 조회 기능")
+@Tag(name = "FAQ API", description = "FAQ 생성, 수정, 삭제 및 조회 기능")
 public interface FAQApiSpec {
 
     @Operation(

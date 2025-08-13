@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/admin/faq")
+@RequestMapping("/api/v1/faq")
 @RequiredArgsConstructor
 public class FAQApi implements FAQApiSpec {
 
