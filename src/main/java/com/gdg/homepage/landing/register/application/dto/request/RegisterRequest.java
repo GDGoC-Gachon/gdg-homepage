@@ -4,6 +4,7 @@ import com.gdg.homepage.landing.register.domain.entity.Grade;
 import com.gdg.homepage.landing.register.domain.entity.Role;
 import com.gdg.homepage.landing.register.domain.entity.TechField;
 import com.gdg.homepage.landing.register.domain.entity.TechStack;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -60,11 +61,12 @@ public class RegisterRequest {
      *
      * <p>예: ["FRONT_END", "BACK_END"]</p>
      */
-    @Schema(
-            description = "관심 분야(여러 개 선택 가능)",
-            example = "[\"FRONT_END\", \"BACK_END\"]",
-            type = "array",
-            implementation = TechField.class
+
+    @ArraySchema(
+            schema = @Schema(implementation = TechField.class),
+            arraySchema = @Schema(
+                    description = "관심 분야(여러 개 선택 가능)"
+            )
     )
     private List<TechField> techField;
 
@@ -73,11 +75,11 @@ public class RegisterRequest {
      *
      * <p>예: ["SPRING_BOOT", "KOTLIN"]</p>
      */
-    @Schema(
-            description = "관심 스택(여러 개 선택 가능)",
-            example = "[\"SPRING_BOOT\", \"KOTLIN\"]",
-            type = "array",
-            implementation = TechStack.class
+    @ArraySchema(
+            schema = @Schema(implementation = TechStack.class),
+            arraySchema = @Schema(
+                    description = "관심 스택(여러 개 선택 가능)"
+            )
     )
     private List<TechStack> techStack;
 
