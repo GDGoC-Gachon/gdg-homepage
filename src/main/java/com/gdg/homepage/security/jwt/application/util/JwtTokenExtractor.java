@@ -105,7 +105,7 @@ public class JwtTokenExtractor {
                         .toList();
 
         // userId를 String 변환
-        Long claimUserId = Long.valueOf(claims.get(ID_CLAIM, String.class));
+        Long claimUserId = claims.get(ID_CLAIM, Long.class);
 
         // 해당 userId로 Member를 조회
         Member user = repository.findById(claimUserId)

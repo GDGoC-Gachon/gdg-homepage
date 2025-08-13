@@ -2,9 +2,7 @@ package com.gdg.homepage.security.jwt.presentation;
 
 import com.gdg.homepage.core.response.ApiResponse;
 import com.gdg.homepage.landing.member.application.dto.request.MemberLoginRequest;
-import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
 import com.gdg.homepage.security.jwt.application.usecase.AuthUseCase;
-import com.gdg.homepage.security.jwt.application.usecase.JwtTokenUseCase;
 import com.gdg.homepage.security.jwt.domain.entity.CustomUserDetails;
 import com.gdg.homepage.security.jwt.presentation.swagger.AuthApiSpec;
 import jakarta.servlet.http.HttpServletRequest;
