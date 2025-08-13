@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@Tag(name = "관리자 API", description = "관리자 관련 API")
+@Tag(name = "관리자 API (가입 관련)", description = "가입 기간에 대한 관리자 API 입니다.")
 public interface AdminApiSpec {
 
     @Operation(

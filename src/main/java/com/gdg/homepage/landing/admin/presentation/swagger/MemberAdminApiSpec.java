@@ -15,7 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Tag(name = "Member Admin API", description = "관리자용 멤버 관리 API")
+@Tag(name = "관리자 API (멤버 관리)", description = "멤버 관리에 대한 관리자 API 입니다.")
 public interface MemberAdminApiSpec {
 
     @Operation(
