@@ -1,5 +1,6 @@
 package com.gdg.homepage.landing.email.application.service;
 
+import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.email.application.usecase.EmailUseCase;
 import com.gdg.homepage.landing.email.application.exception.NotVerifiedException;
 import com.gdg.homepage.landing.email.domain.entity.VerificationCode;
@@ -27,8 +28,8 @@ public class EmailService implements EmailUseCase {
     private final JavaMailSender emailSender;
     private final VerificationCodeRepository emailRepository;
 
-    @Value("${spring.mail.url}")
-    private String url;
+    @Value("${cors.front.dev}")
+    private String front;
 
     @Override
     public void sendEmail(String toEmail) throws MessagingException {
@@ -65,7 +66,7 @@ public class EmailService implements EmailUseCase {
             emailSender.send(message);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new MessagingException("메시지 전송에 실패했습니다.", e);
+            throw new MessagingException(ErrorCode.EMAIL_SEND_FAILED.getMessage(), e);
         }
     }
 
@@ -103,7 +104,7 @@ public class EmailService implements EmailUseCase {
                     emailRepository.delete(vc); // 검증 후 삭제
                     return true;
                 })
-                .orElseThrow(() -> new NotVerifiedException("유효하지 않거나 만료된 코드입니다."));
+                .orElseThrow(() -> new NotVerifiedException(ErrorCode.INVALID_VERIFICATION_CODE.getMessage()));
     }
 
     @Scheduled(cron = "0 0 12 * * *") // 매일 정오(12:00 PM) 실행
@@ -119,8 +120,7 @@ public class EmailService implements EmailUseCase {
 
         // 기초 세팅
         String title = "GDGoC Gachon 비밀번호 변경 링크";
-        String resetLink = url+"/api/v1/member/reset-password?token=" + token;
-
+        String resetLink = front+"/reset-password?token=" + token;
 
         // 설정
         helper.setTo(email);
@@ -148,7 +148,7 @@ public class EmailService implements EmailUseCase {
             emailSender.send(message);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new MessagingException("메시지 전송에 실패했습니다.", e);
+            throw new MessagingException(ErrorCode.EMAIL_SEND_FAILED.getMessage(), e);
         }
     }
 

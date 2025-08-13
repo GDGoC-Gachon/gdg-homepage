@@ -1,5 +1,6 @@
 package com.gdg.homepage.landing.member.application.service;
 
+import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.email.application.usecase.EmailUseCase;
 import com.gdg.homepage.landing.member.application.usecase.MemberUseCase;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailResponse;
@@ -9,7 +10,6 @@ import com.gdg.homepage.landing.member.domain.repository.MemberRepository;
 import com.gdg.homepage.landing.member.domain.repository.ResetTokenRepository;
 import com.gdg.homepage.landing.register.application.usecase.RegisterUseCase;
 import jakarta.mail.MessagingException;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+
+import static com.gdg.homepage.core.response.ErrorCode.PASSWORD_MISMATCH;
+import static com.gdg.homepage.core.response.ErrorCode.RESET_TOKEN_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -38,7 +41,7 @@ public class MemberService implements MemberUseCase {
     @Override
     public MemberDetailResponse loadMyMember(Long memberId) {
         Member member = repository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("해당하는 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         return MemberDetailResponse.from(member);
 
@@ -47,7 +50,7 @@ public class MemberService implements MemberUseCase {
     @Override
     public void requestPasswordChange(Long memberId) throws MessagingException {
         Member member = repository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
         // 기존 토큰 삭제 (중복 요청 방지)
         tokenRepository.deleteByMember(member);
@@ -68,21 +71,21 @@ public class MemberService implements MemberUseCase {
 
         /// 토큰 맞는지 체크
         ResetToken resetToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 토큰이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(RESET_TOKEN_NOT_FOUND.getMessage()));
 
         /// 유저 예외처리
         Member member = repository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
 
         /// 일치 여부 예외
         if (!(resetToken.getMember().equals(member))) {
-            throw new IllegalStateException("토큰과 멤버가 일치하지 않습니다.");
+            throw new IllegalStateException(ErrorCode.TOKEN_MEMBER_MISMATCH.getMessage());
         }
 
         /// 변경 예외
         if (!newPassword.equals(confirmPassword)) {
-            throw new IllegalStateException("설정한 비밀번호가 서로 다릅니다.");
+            throw new IllegalStateException(PASSWORD_MISMATCH.getMessage());
         }
 
         member.changePassword(bCryptPasswordEncoder.encode(newPassword));

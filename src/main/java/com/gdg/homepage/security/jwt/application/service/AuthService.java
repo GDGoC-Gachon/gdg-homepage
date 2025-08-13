@@ -88,7 +88,7 @@ public class AuthService implements AuthUseCase {
 
     private Member getMember(String email) {
         return repository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.USER_NOT_FOUND_EMAIL.getMessage()));
     }
 
     private Member getMember(Long userId) {

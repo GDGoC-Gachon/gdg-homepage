@@ -1,6 +1,5 @@
 package com.gdg.homepage.landing.admin.application.service;
 
-import com.gdg.homepage.core.response.CustomException;
 import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.admin.application.usecase.AdminUseCase;
 import com.gdg.homepage.landing.admin.domain.domain.JoinPeriod;
@@ -12,7 +11,6 @@ import com.gdg.homepage.landing.admin.domain.repository.JoinPeriodRepository;
 import com.gdg.homepage.landing.admin.domain.repository.PageViewRepository;
 import com.gdg.homepage.landing.member.domain.repository.MemberRepository;
 import com.gdg.homepage.landing.register.domain.repository.RegisterRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +21,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.gdg.homepage.core.response.ErrorCode.JOIN_PERIOD_NOT_ACTIVE;
+import static com.gdg.homepage.core.response.ErrorCode.JOIN_PERIOD_OVERLAP;
 
 @Slf4j
 @Service
@@ -43,7 +44,7 @@ public class AdminService implements AdminUseCase {
         // 기간 겹침 여부 확인
         boolean isOverlapping = joinPeriodRepository.periodExist(endDate, startDate);
         if (isOverlapping) {
-            throw new IllegalArgumentException("해당 기간은 이미 존재하는 가입 기간과 겹칩니다.");
+            throw new IllegalArgumentException(JOIN_PERIOD_OVERLAP.getMessage());
         }
 
         // 가입 기간 생성
@@ -65,7 +66,7 @@ public class AdminService implements AdminUseCase {
         boolean isOverlapping = joinPeriodRepository.periodExist(endDate, startDate);
 
         if (isOverlapping) {
-            throw new IllegalArgumentException("해당 기간은 이미 존재하는 가입 기간과 겹칩니다.");
+            throw new IllegalArgumentException(JOIN_PERIOD_OVERLAP.getMessage());
         }
 
         JoinPeriod joinPeriod = joinPeriodRepository.findById(id)
@@ -96,7 +97,7 @@ public class AdminService implements AdminUseCase {
     @Override
     public JoinPeriod checkJoinPeriod(LocalDateTime now) {
         return joinPeriodRepository.findActiveJoinPeriod(now)
-                .orElseThrow(() -> new EntityNotFoundException("현재 시간에 대한 가입기간 설정이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(JOIN_PERIOD_NOT_ACTIVE.getMessage()));
     }
 
     @Override

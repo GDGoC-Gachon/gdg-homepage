@@ -19,6 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import static com.gdg.homepage.core.response.ErrorCode.*;
 
 @Service
 @Transactional
@@ -61,10 +64,10 @@ public class MemberAdminService implements MemberAdminUseCase {
     @Override
     public void changeRole(MemberUpgradeRequest request) {
         Member admin = repository.findById(request.getAdminId())
-                .orElseThrow(() -> new EntityNotFoundException("해당하는 어드민이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(ADMIN_NOT_FOUND.getMessage()));
 
         Member member = repository.findById(request.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException("권한을 수정할 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(USER_NOT_FOUND.getMessage()));
 
         // 권한 수정
         member.upgradeRole(admin, request.getRole());
@@ -73,7 +76,7 @@ public class MemberAdminService implements MemberAdminUseCase {
     @Override
     public MemberDetailResponse loadMember(Long memberId) {
         Member member = repository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("해당하는 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(USER_NOT_FOUND.getMessage()));
 
         return MemberDetailResponse.from(member);
     }
@@ -86,10 +89,10 @@ public class MemberAdminService implements MemberAdminUseCase {
     @Override
     public void approveMember(MemberApprovalDecisionRequest request) {
         Member admin = repository.findById(request.getAdminId())
-                .orElseThrow(() -> new EntityNotFoundException("해당하는 어드민이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(ADMIN_NOT_FOUND.getMessage()));
 
         Member member = repository.findById(request.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("승인할 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(MEMBER_APPROVE_TARGET_NOT_FOUND.getMessage()));
 
         // 승인
         member.getRegister().approve();
@@ -102,10 +105,10 @@ public class MemberAdminService implements MemberAdminUseCase {
     public void rejectMember(MemberApprovalDecisionRequest request) {
 
         Member admin = repository.findById(request.getAdminId())
-                .orElseThrow(() -> new EntityNotFoundException("해당하는 어드민이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(ADMIN_NOT_FOUND.getMessage()));
 
         Member member = repository.findById(request.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("승인할 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException(MEMBER_APPROVE_TARGET_NOT_FOUND.getMessage()));
 
         // 승인
         member.getRegister().reject();

@@ -84,6 +84,19 @@ public class GlobalExceptionHandler {
         return handleCustomException(exception, request);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({NullPointerException.class})
+    public ApiResponse<CustomException> handleNullPointerException(Exception e, HttpServletRequest request) {
+
+        ErrorCode errorCode = ErrorCode.NULL_SERVER_ERROR;
+
+        // 예외 생성
+        CustomException exception = new CustomException(errorCode, null);
+
+        return handleCustomException(exception, request);
+    }
+
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<CustomException> handleValidationExceptions(MethodArgumentNotValidException e, HttpServletRequest request) {
