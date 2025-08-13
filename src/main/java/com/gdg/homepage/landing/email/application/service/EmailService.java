@@ -1,9 +1,9 @@
 package com.gdg.homepage.landing.email.application.service;
 
 import com.gdg.homepage.landing.email.application.usecase.EmailUseCase;
-import com.gdg.homepage.landing.email.exception.NotVerifiedException;
-import com.gdg.homepage.landing.member.domain.entity.VerificationCode;
-import com.gdg.homepage.landing.member.domain.repository.EmailRepository;
+import com.gdg.homepage.landing.email.application.exception.NotVerifiedException;
+import com.gdg.homepage.landing.email.domain.entity.VerificationCode;
+import com.gdg.homepage.landing.email.domain.repository.VerificationCodeRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class EmailService implements EmailUseCase {
 
     private final JavaMailSender emailSender;
-    private final EmailRepository emailRepository;
+    private final VerificationCodeRepository emailRepository;
 
     @Value("${spring.mail.url}")
     private String url;

@@ -1,4 +1,4 @@
-package com.gdg.homepage.landing.member.domain.entity;
+package com.gdg.homepage.landing.email.domain.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

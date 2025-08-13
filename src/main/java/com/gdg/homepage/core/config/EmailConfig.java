@@ -1,6 +1,6 @@
 package com.gdg.homepage.core.config;
 
-import com.gdg.homepage.landing.member.domain.repository.EmailRepository;
+import com.gdg.homepage.landing.email.domain.repository.VerificationCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class EmailConfig {
 
-    private final EmailRepository emailRepository;
+    private final VerificationCodeRepository emailRepository;
 
     @Value("${spring.mail.host}")
     private String host;
