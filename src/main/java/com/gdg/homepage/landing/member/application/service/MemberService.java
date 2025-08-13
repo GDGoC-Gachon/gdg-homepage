@@ -1,9 +1,7 @@
 package com.gdg.homepage.landing.member.application.service;
 
 import com.gdg.homepage.landing.member.application.dto.request.MemberLoginRequest;
-import com.gdg.homepage.landing.member.application.dto.request.MemberRegisterRequest;
 import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
-import com.gdg.homepage.landing.member.application.dto.response.MemberRegisterResponse;
 import com.gdg.homepage.landing.email.application.usecase.EmailUseCase;
 import com.gdg.homepage.landing.member.application.usecase.MemberUseCase;
 import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
@@ -13,14 +11,11 @@ import com.gdg.homepage.landing.member.domain.entity.Member;
 import com.gdg.homepage.landing.member.domain.entity.ResetToken;
 import com.gdg.homepage.landing.member.domain.repository.MemberRepository;
 import com.gdg.homepage.landing.member.domain.repository.ResetTokenRepository;
-import com.gdg.homepage.landing.register.application.dto.request.RegisterRequest;
-import com.gdg.homepage.landing.register.domain.entity.Register;
 import com.gdg.homepage.landing.register.application.usecase.RegisterUseCase;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -48,24 +43,6 @@ public class MemberService implements MemberUseCase {
     private final JwtTokenProvider tokenProvider;
     private final RegisterUseCase registerService;
     private final EmailUseCase emailService;
-
-    /// 비즈니스 로직 처리
-    @Override
-    public MemberRegisterResponse registerMember(MemberRegisterRequest request, RegisterRequest registerRequest) {
-
-        /// 이메일이 중복되었는지 확인
-        if (repository.existsByEmail(request.getEmail())) {
-            throw new DataIntegrityViolationException("이미 존재하는 이메일입니다.");
-        }
-
-        /// 신청서 작업까지 마무리 되었는지 확인
-        Register register = registerService.createRegister(registerRequest);
-
-        /// 신청서도 작업이 완료되었다면, 신청서와 멤버를 함께 저장
-        Member member = Member.of(request.getEmail(), bCryptPasswordEncoder.encode(request.getPassword()), request.getName(), request.getPhoneNumber(), register);
-
-        return MemberRegisterResponse.from(repository.save(member));
-    }
 
     @Override
     public MemberLoginResponse login(@RequestBody MemberLoginRequest request) {

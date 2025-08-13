@@ -4,7 +4,6 @@ import com.gdg.homepage.core.response.ApiResponse;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailResponse;
 import com.gdg.homepage.landing.member.application.dto.request.MemberLoginRequest;
 import com.gdg.homepage.landing.member.application.dto.request.MemberPasswordChangeRequest;
-import com.gdg.homepage.landing.member.application.dto.request.MemberRegisterWrapper;
 import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
 import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,14 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "멤버 API", description = "멤버 관련 API")
+@Tag(name = "멤버 API", description = "회원가입 이후, 승인이 된 멤버가 사용하는 API 입니다.")
 public interface MemberApiSpec {
-
-    @Operation(
-            summary = "회원 가입",
-            description = "GDG Gachon 멤버의 회원 가입을 처리합니다."
-    )
-    ApiResponse<String> create(@RequestBody MemberRegisterWrapper wrapper);
 
     @Operation(
             summary = "로그인",
@@ -47,7 +40,7 @@ public interface MemberApiSpec {
             summary = "회원 탈퇴",
             description = "회원 탈퇴를 처리합니다."
     )
-    ApiResponse<String> delete(@AuthenticationPrincipal CustomUserDetails memberDetails);
+    ApiResponse<Void> delete(@AuthenticationPrincipal CustomUserDetails memberDetails);
 
 
     @Operation(
@@ -65,4 +58,4 @@ public interface MemberApiSpec {
                                       @AuthenticationPrincipal CustomUserDetails memberDetails,
                                       @RequestBody MemberPasswordChangeRequest request);
 
-    }
+}

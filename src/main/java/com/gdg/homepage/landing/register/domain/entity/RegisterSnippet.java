@@ -36,7 +36,7 @@ public class RegisterSnippet {
 
     private String other;
 
-    // of() 메서드 대신 빌더 패턴으로 객체 생성
+    /// 정적 팩토리 메서드
     public static RegisterSnippet of(
             Grade grade,
             String studentId,

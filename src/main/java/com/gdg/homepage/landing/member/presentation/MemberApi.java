@@ -4,7 +4,6 @@ import com.gdg.homepage.core.response.ApiResponse;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailResponse;
 import com.gdg.homepage.landing.member.application.dto.request.MemberLoginRequest;
 import com.gdg.homepage.landing.member.application.dto.request.MemberPasswordChangeRequest;
-import com.gdg.homepage.landing.member.application.dto.request.MemberRegisterWrapper;
 import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
 import com.gdg.homepage.landing.member.application.usecase.MemberUseCase;
 import com.gdg.homepage.landing.member.presentation.swagger.MemberApiSpec;
@@ -21,17 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class MemberApi implements MemberApiSpec {
 
     private final MemberUseCase memberService;
-
-
-    @PostMapping("/register")
-    public ApiResponse<String> create(@RequestBody MemberRegisterWrapper wrapper) {
-
-        /// 서비스 호출
-        memberService.registerMember(wrapper.getMember(), wrapper.getApply());
-
-        /// 리턴
-        return ApiResponse.created();
-    }
 
     @PostMapping("/login")
     public ApiResponse<MemberLoginResponse> login(@RequestBody MemberLoginRequest request) {
@@ -63,11 +51,12 @@ public class MemberApi implements MemberApiSpec {
     }
 
     @DeleteMapping
-    public ApiResponse<String> delete(@AuthenticationPrincipal CustomUserDetails memberDetails) {
+    public ApiResponse<Void> delete(@AuthenticationPrincipal CustomUserDetails memberDetails) {
 
+        /// 서비스 호출
         memberService.deleteMember(memberDetails.getId());
 
-
+        /// 리턴
         return ApiResponse.deleted();
     }
 

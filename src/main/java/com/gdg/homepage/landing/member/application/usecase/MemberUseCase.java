@@ -3,25 +3,17 @@ package com.gdg.homepage.landing.member.application.usecase;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailResponse;
 import com.gdg.homepage.landing.member.application.dto.request.MemberLoginRequest;
 import com.gdg.homepage.landing.member.application.dto.response.MemberLoginResponse;
-import com.gdg.homepage.landing.member.application.dto.request.MemberRegisterRequest;
-import com.gdg.homepage.landing.member.application.dto.response.MemberRegisterResponse;
-import com.gdg.homepage.landing.register.application.dto.request.RegisterRequest;
 import jakarta.mail.MessagingException;
 
 /**
  * 회원 관련 주요 UseCase 인터페이스입니다.
  * <p>
- * 회원가입, 로그인(JWT 기반), 로그아웃, 내 정보 조회, 비밀번호 변경 등
+ * 로그인(JWT 기반), 로그아웃, 내 정보 조회, 비밀번호 변경 등
  * 회원 관리와 관련된 핵심 기능을 정의합니다.<br>
  * 역할 기반 시큐리티 적용이 필요할 경우 비즈니스 로직에서 활용 가능합니다.
  * </p>
  */
 public interface MemberUseCase {
-
-    /**
-     * 회원가입을 처리합니다.
-     */
-    MemberRegisterResponse registerMember(MemberRegisterRequest request, RegisterRequest registerRequest);
 
     /**
      * JWT 기반 로그인을 처리합니다.

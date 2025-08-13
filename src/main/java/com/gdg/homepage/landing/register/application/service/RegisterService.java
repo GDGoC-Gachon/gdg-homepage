@@ -2,6 +2,10 @@ package com.gdg.homepage.landing.register.application.service;
 
 import com.gdg.homepage.landing.admin.domain.domain.JoinPeriod;
 import com.gdg.homepage.landing.admin.application.usecase.AdminUseCase;
+import com.gdg.homepage.landing.member.domain.repository.MemberRepository;
+import com.gdg.homepage.landing.register.application.dto.response.MemberRegisterResponse;
+import com.gdg.homepage.landing.member.domain.entity.Member;
+import com.gdg.homepage.landing.register.application.dto.request.MemberRequest;
 import com.gdg.homepage.landing.register.application.dto.request.RegisterRequest;
 import com.gdg.homepage.landing.register.application.usecase.RegisterUseCase;
 import com.gdg.homepage.landing.register.domain.entity.Register;
@@ -9,10 +13,15 @@ import com.gdg.homepage.landing.register.domain.entity.RegisterSnippet;
 import com.gdg.homepage.landing.register.domain.repository.RegisterRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+
+import static com.gdg.homepage.core.response.ErrorCode.DUPLICATE_EMAIL;
+import static com.gdg.homepage.core.response.ErrorCode.NOT_PERIOD;
 
 @Service
 @Transactional
@@ -20,25 +29,49 @@ import java.time.LocalDateTime;
 public class RegisterService implements RegisterUseCase {
 
     private final RegisterRepository registerRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    /// 외부 의존성
+    private final MemberRepository memberRepository;
     private final AdminUseCase adminService;
 
-    /*
-        지원서 생성은 회원가입과 동일하게 이루어지기에
-        해당 부분은 API에서 사용하지 않는다.
-     */
-
+    /// 비즈니스 로직 처리
     @Override
-    public Register createRegister(RegisterRequest request) {
-        LocalDateTime now = LocalDateTime.now();
-        JoinPeriod period = adminService.checkJoinPeriod(now);
+    public MemberRegisterResponse registerMember(MemberRequest request, RegisterRequest registerRequest) {
 
-        if (!period.getStatus()) {
-            throw new IllegalStateException("가입시간이 조기종료 되었습니다.");
+        /// 이메일이 중복되었는지 확인
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new DataIntegrityViolationException(DUPLICATE_EMAIL.getMessage());
         }
 
-        RegisterSnippet snippet = RegisterSnippet.of(request.getGrade(), request.getStudentId(), request.getMajor(), request.getTechField(), request.getTechStack(), request.getOther());
+        /// 신청서 작업까지 마무리 되었는지 확인
+        Register register = createRegister(registerRequest);
 
+        /// 신청서도 작업이 완료되었다면, 신청서와 멤버를 함께 저장
+        Member member = Member.of(request.getEmail(), bCryptPasswordEncoder.encode(request.getPassword()), request.getName(), request.getPhoneNumber(), register);
+
+        return MemberRegisterResponse.from(memberRepository.save(member));
+    }
+
+
+    private Register createRegister(RegisterRequest request) {
+
+        /// 현재 시간 바탕
+        LocalDateTime now = LocalDateTime.now();
+
+        /// 가입 기간 체크
+        JoinPeriod period = adminService.checkJoinPeriod(now);
+
+        /// 아니라면, 예외 처리
+        if (!period.getStatus()) {
+            throw new IllegalStateException(NOT_PERIOD.getMessage());
+        }
+
+        /// 객체 생성
+        RegisterSnippet snippet = RegisterSnippet.of(request.getGrade(), request.getStudentId(), request.getMajor(), request.getTechField(), request.getTechStack(), request.getOther());
         Register register = Register.of(period, snippet, request.getRole());
+
+        /// 저장 후 리턴
         return registerRepository.save(register);
     }
 

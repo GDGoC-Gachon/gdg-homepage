@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+import static com.gdg.homepage.core.response.ErrorCode.*;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -70,11 +72,11 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void changeRole(Member admin, Member member) {
 
         if (admin.getRole().equals(MemberRole.MEMBER) || admin.getRole().equals(MemberRole.NON_MEMBER)){
-            throw new IllegalStateException("멤버는 다른 멤버를 승인할 수 없습니다.");
+            throw new IllegalStateException(NOT_APPROVE_YET.getMessage());
         }
 
         if (!member.getRegister().isApproved()) {
-            throw new IllegalStateException("아직 신청서가 승인되지 않아서 역할을 수정할 수 업습니다. 관리자에게 문의하세요");
+            throw new IllegalStateException(NOT_APPROVE_YET.getMessage());
         }
 
         member.role = register.getRegisteredRole().toMemberRole();
@@ -84,15 +86,15 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void upgradeRole(Member admin, MemberRole role) {
 
         if (admin.getRole() != MemberRole.ORGANIZER) {
-            throw new IllegalStateException("ORGANIZER 만 권한을 수정할 수 있습니다.");
+            throw new IllegalStateException(APPROVE_ORGANIZER.getMessage());
         }
 
         if (!this.register.isApproved()){
-            throw new IllegalStateException("신청서를 승인받지못한 멤버는 권한을 바꿀 수 없습니다. 승인 먼저 진행해주세요");
+            throw new IllegalStateException(NOT_APPROVE_YET.getMessage());
         }
 
         if(role.equals(MemberRole.ORGANIZER)){
-            throw new IllegalStateException("ORGANIZER로 승급할 수 없습니다.");
+            throw new IllegalStateException(NOT_APPROVE_ORGANIZER.getMessage());
         }
 
         this.role = role;

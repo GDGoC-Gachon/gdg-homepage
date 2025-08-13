@@ -1,4 +1,4 @@
-package com.gdg.homepage.landing.member.application.dto.request;
+package com.gdg.homepage.landing.register.application.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -6,7 +6,7 @@ import lombok.*;
 @Data
 @Builder
 @Getter
-public class MemberRegisterRequest {
+public class MemberRequest {
 
     // 가입
     @Schema(description = "이메일", example = "example@gmail.com")

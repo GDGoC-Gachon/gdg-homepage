@@ -1,4 +1,4 @@
-package com.gdg.homepage.landing.member.application.dto.response;
+package com.gdg.homepage.landing.register.application.dto.response;
 
 import com.gdg.homepage.landing.member.domain.entity.Member;
 import lombok.AllArgsConstructor;
