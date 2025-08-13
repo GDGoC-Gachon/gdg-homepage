@@ -7,6 +7,7 @@ import com.gdg.homepage.landing.admin.application.dto.response.AnalyticsResponse
 import com.gdg.homepage.landing.admin.application.dto.request.JoinPeriodRequest;
 import com.gdg.homepage.landing.admin.application.dto.response.JoinPeriodResponse;
 import com.gdg.homepage.landing.admin.application.service.AdminService;
+import com.gdg.homepage.landing.admin.presentation.swagger.AdminApiSpec;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,55 +19,40 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@Tag(name = "Admin API", description = "관리자 관련 API")
-public class AdminApi {
+public class AdminApi implements AdminApiSpec {
 
     private final AdminService adminService;
 
-    @Operation(
-            summary = "가입 일정 생성",
-            description = "리크루팅에 대한 새로운 가입 일정을 생성합니다."
-    )
+
     @PostMapping("/joinPeriod/create")
     public ApiResponse<String> createJoinPeriod(@RequestBody @Valid JoinPeriodRequest joinPeriodRequest) {
         adminService.createJoinPeriod(joinPeriodRequest);
         return ApiResponse.created("JoinPeriod is created.");
     }
 
-    @Operation(
-            summary = "가입 일정 수정",
-            description = "특정 ID의 가입 일정을 수정합니다."
-    )
+
     @PutMapping("/joinPeriod/update/{id}")
-    public ApiResponse<JoinPeriodResponse> updateJoinPeriod(@PathVariable("id") Long id,@Valid @RequestBody JoinPeriodRequest joinPeriodRequest) {
+    public ApiResponse<JoinPeriodResponse> updateJoinPeriod(@PathVariable("id") Long id,
+                                                            @Valid @RequestBody JoinPeriodRequest joinPeriodRequest) {
+
         JoinPeriodResponse responseDto = adminService.updateJoinPeriod(id, joinPeriodRequest);
         return ApiResponse.ok(responseDto);
     }
 
-    @Operation(
-            summary = "가입 목록 조회",
-            description = "리크루팅 모든 가입 일정을 조회합니다."
-    )
+
     @GetMapping("/joinPeriod/all")
     public ApiResponse<List<JoinPeriodResponse>> getAllJoinPeriods() {
         List<JoinPeriodResponse> responseDtos = adminService.getAllJoinPeriods();
         return ApiResponse.ok(responseDtos);
     }
 
-    @Operation(
-            summary = "가입 조기 종료",
-            description = "리크루팅 특정 가입 일정을 조기 종료합니다."
-    )
+
     @DeleteMapping("/joinPeriod/terminate/{id}")
     public ApiResponse<String> terminateJoinPeriod(@PathVariable("id") Long id) {
         adminService.terminateJoinPeriod(id);
         return ApiResponse.ok("JoinPeriod is terminated.");
     }
 
-    @Operation(
-            summary = "분석 페이지 데이터 조회",
-            description = "회원 총수, 현재 등록자 수, 페이지 조회 수 등의 분석 데이터를 조회합니다."
-    )
 
     // 분석 대시보드 조회
     @GetMapping("/analytic")

@@ -10,21 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(
-        name = "View API", description = "관리자 화면 제공 API")
+
 public class ViewApi {
 
     private final AdminService adminService;
 
-    //  페이지 조회 수 증가
-    @Operation(
-            summary = "페이지 조회 수 증가",
-            description = "해당 API를 호출하면 특정 페이지의 조회 수가 1 증가합니다."
-    )
+
     @PostMapping("/pageView/increment")
     public ApiResponse<String> incrementPageViewCount() {
+        /// 서비스 호출
         adminService.incrementPageView();
-        return ApiResponse.ok("조회수 증가");
+
+        return ApiResponse.created();
     }
   
 }
