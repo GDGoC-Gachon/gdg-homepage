@@ -3,53 +3,103 @@ package com.gdg.homepage.core.exception;
 import com.gdg.homepage.core.response.ApiResponse;
 import com.gdg.homepage.core.response.CustomException;
 import com.gdg.homepage.core.response.ErrorCode;
-import com.gdg.homepage.landing.member.application.exception.NotVerifiedException;
-import jakarta.persistence.EntityNotFoundException;
+import com.gdg.homepage.core.response.FieldErrorResponse;
+import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 
+/**
+ * 전역 예외 처리 핸들러
+ * - @Hidden 은 스웨거에서 인식 되지 않도록 에러 수정용
+ */
+
+@Hidden
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiResponse<?> handleEntityNotFoundException(EntityNotFoundException ex) {
-        log.error("[예외 발생] EntityNotFoundException: {}", ex.getMessage());
-        return ApiResponse.fail(new CustomException(ErrorCode.NOT_FOUND_END_POINT,ex.getMessage()));
-    }
+    /// 공통 처리 메서드
+    private ApiResponse<CustomException> handleCustomException(CustomException customException, HttpServletRequest request) {
+        String username = request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "anonymous";
+        ErrorCode errorCode = customException.getErrorCode();
 
-    @ExceptionHandler(IllegalStateException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<?> handleIllegalStateException(Exception ex) {
-        log.error("[예외 발생] Exception: {}", ex.getMessage());
-        return ApiResponse.fail(new CustomException(ErrorCode.BAD_REQUEST,ex.getMessage()));
-    }
+        log.info("[EXCEPTION] 사용자: {}, 메서드: {}, URI: {}, 예외: {}",
+                username, request.getMethod(), request.getRequestURI(), errorCode.getMessage());
 
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ApiResponse<?> handleAccessDeniedException(AccessDeniedException ex) {
-        log.error("[권한 없음] Exception: {}", ex.getMessage());
-        return ApiResponse.fail(new CustomException(ErrorCode.Forbidden,ex.getMessage()));
+        return ApiResponse.fail(customException);
     }
 
 
-    @ExceptionHandler(Exception.class)
+    /// 예외 처리
+    // 최하위 예외처리
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiResponse<?> handleGeneralException(Exception ex) {
-        log.error("[예외 발생] Exception: {}", ex.getMessage());
-        return ApiResponse.fail(new CustomException(ErrorCode.INTERNAL_SERVER_ERROR,ex.getMessage()));
+    @ExceptionHandler(Exception.class)
+    public ApiResponse<CustomException> handleException(Exception e, HttpServletRequest request) {
+
+        /// 로그 발생
+        log.error(e.getMessage(), e);
+
+        /// 500 예외 코드 검색
+        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+
+        /// 해당 예외 코드로 예외 처리
+        CustomException exception = new CustomException(errorCode, null);
+
+        return handleCustomException(exception, request);
     }
 
-    @ExceptionHandler(NotVerifiedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<?> handleNotVerifiedException(NotVerifiedException ex) {
-        log.error("[예외 발생] Exception: {}", ex.getMessage());
-        return ApiResponse.fail(new CustomException(ErrorCode.BAD_REQUEST,ex.getMessage()));
+    @ExceptionHandler({
+            IllegalStateException.class, IllegalArgumentException.class})
+    public ApiResponse<CustomException> handleIllegalStateException(Exception e, HttpServletRequest request) {
+
+        /// 메세지 바탕으로 예외 코드 검색
+        ErrorCode errorCode = ErrorCode.fromMessage(e.getMessage());
+
+        /// 해당 예외 코드로 예외 처리
+        CustomException exception = new CustomException(errorCode, null);
+
+        return handleCustomException(exception, request);
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({NoSuchElementException.class, NoResourceFoundException.class})
+    public ApiResponse<CustomException> handleNoSuchException(Exception e, HttpServletRequest request) {
+
+        /// 메세지 바탕으로 예외 코드 검색
+        ErrorCode errorCode = ErrorCode.fromMessage(e.getMessage());
+
+        /// 해당 예외 코드로 예외 처리
+        CustomException exception = new CustomException(errorCode, null);
+
+        return handleCustomException(exception, request);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ApiResponse<CustomException> handleValidationExceptions(MethodArgumentNotValidException e, HttpServletRequest request) {
+
+        /// 파라미터용 예외 코드
+        ErrorCode errorCode = ErrorCode.BAD_PARAMETER;
+
+        /// BindingResult 바탕으로 필드에러 List 생성
+        List<FieldErrorResponse> errors = e.getBindingResult().getFieldErrors()
+                .stream()
+                .map(error -> FieldErrorResponse.of(error.getField(), error.getDefaultMessage()))
+                .toList();
+
+        CustomException exception = new CustomException(errorCode, errors);
+
+        return handleCustomException(exception, request);
+    }
+
 }

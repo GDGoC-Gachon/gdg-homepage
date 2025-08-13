@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
+
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
@@ -20,10 +22,27 @@ public enum ErrorCode {
     // 404 Not Found
     NOT_FOUND_END_POINT(404, HttpStatus.NOT_FOUND, "요청한 대상이 존재하지 않습니다."),
     // 500 Internal Server Error
-    INTERNAL_SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다.");
-
+    INTERNAL_SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다."),
+    /**
+     * 요청 파라미터 오류
+     */
+    BAD_PARAMETER(999, HttpStatus.BAD_REQUEST, "요청 파라미터에 문제가 존재합니다.");
 
     private final Integer code;
     private final HttpStatus httpStatus;
     private final String message;
+
+    /**
+     * 메시지를 바탕으로 ErrorCode를 반환합니다.
+     * 동일한 메시지가 여러 ErrorCode에 할당된 경우, 첫 번째로 일치하는 ErrorCode를 반환합니다.
+     *
+     * @param message 에러 메시지
+     * @return 일치하는 ErrorCode
+     */
+    public static ErrorCode fromMessage(String message) {
+        return Arrays.stream(values())
+                .filter(code -> code.message.equalsIgnoreCase(message))
+                .findFirst()
+                .orElse(ErrorCode.INTERNAL_SERVER_ERROR); // 기본 에러 처리
+    }
 }
