@@ -35,6 +35,7 @@ public class RequestMatcherHolder {
 
             // 이메일
             new RequestInfo(POST, "/api/v1/email/**", null),
+            new RequestInfo(GET, "/api/v1/email/**", null),
 
 
             // 유저
