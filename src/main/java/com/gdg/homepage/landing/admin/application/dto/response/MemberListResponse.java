@@ -1,0 +1,55 @@
+package com.gdg.homepage.landing.admin.application.dto.response;
+
+import com.gdg.homepage.landing.member.domain.entity.Member;
+import com.gdg.homepage.landing.member.domain.entity.MemberRole;
+import com.gdg.homepage.landing.register.domain.entity.RegisterSnippet;
+import lombok.Builder;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
+@Builder
+public class MemberListResponse {
+
+    private Long memberId;
+    private String email;
+    private String name;
+    private String grade;
+    private String studentId;
+    private String phoneNumber;
+    private MemberRole role;
+    private boolean approved;
+    private LocalDateTime approvedAt;
+
+    // from
+    public static MemberListResponse from(Member member) {
+
+        RegisterSnippet snippet = member.getRegister().getSnippet();
+
+        MemberRole role = member.getRole();
+
+        if (member.getRole().equals(MemberRole.NON_MEMBER)){
+            role = member.getRegister().getRegisteredRole().toMemberRole();
+        }
+
+        return MemberListResponse.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .name(member.getName())
+                .grade(snippet.getGrade().getLabel())
+                .studentId(snippet.getStudentId())
+                .phoneNumber(member.getPhoneNumber())
+                .role(role)
+                .approved(member.getRegister().isApproved())
+                .approvedAt(member.getRegister().getApprovedAt())
+                .build();
+    }
+    // from
+    public static List<MemberListResponse> from(List<Member> members) {
+
+        return members.stream()
+                .map(MemberListResponse::from).toList();
+    }
+}

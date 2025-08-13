@@ -8,7 +8,10 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
 
-volumes:
-  mysql_data:
+  redis:
+    image: redis:7.2.5
+    container_name: gdg-redis
+    ports:
+      - '6379:6379'

@@ -1,0 +1,158 @@
+package com.gdg.homepage.landing.admin.application.service;
+
+import com.gdg.homepage.core.response.ErrorCode;
+import com.gdg.homepage.landing.admin.application.usecase.AdminUseCase;
+import com.gdg.homepage.landing.admin.domain.domain.JoinPeriod;
+import com.gdg.homepage.landing.admin.domain.domain.PageView;
+import com.gdg.homepage.landing.admin.application.dto.response.AnalyticsResponse;
+import com.gdg.homepage.landing.admin.application.dto.request.JoinPeriodRequest;
+import com.gdg.homepage.landing.admin.application.dto.response.JoinPeriodResponse;
+import com.gdg.homepage.landing.admin.domain.repository.JoinPeriodRepository;
+import com.gdg.homepage.landing.admin.domain.repository.PageViewRepository;
+import com.gdg.homepage.landing.member.domain.repository.MemberRepository;
+import com.gdg.homepage.landing.register.domain.repository.RegisterRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.gdg.homepage.core.response.ErrorCode.JOIN_PERIOD_NOT_ACTIVE;
+import static com.gdg.homepage.core.response.ErrorCode.JOIN_PERIOD_OVERLAP;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class AdminService implements AdminUseCase {
+
+    private final JoinPeriodRepository joinPeriodRepository;
+    private final PageViewRepository pageViewRepository;
+    private final RegisterRepository registerRepository;
+    private final MemberRepository memberRepository;
+
+    @Override
+    public void createJoinPeriod(JoinPeriodRequest joinPeriodRequest) {
+        // period생성할 때 start~end사이에 겹치지 않도록 설정
+        LocalDateTime startDate = joinPeriodRequest.getStartDate();
+        LocalDateTime endDate = joinPeriodRequest.getEndDate();
+        // 기간 겹침 여부 확인
+        boolean isOverlapping = joinPeriodRepository.periodExist(endDate, startDate);
+        if (isOverlapping) {
+            throw new IllegalArgumentException(JOIN_PERIOD_OVERLAP.getMessage());
+        }
+
+        // 가입 기간 생성
+        JoinPeriod joinPeriod = JoinPeriod.builder()
+                .title(joinPeriodRequest.getTitle())
+                .startDate(joinPeriodRequest.getStartDate())
+                .endDate(joinPeriodRequest.getEndDate())
+                .maxMember(joinPeriodRequest.getMaxMember())
+                .status(true)
+                .build();
+
+        joinPeriodRepository.save(joinPeriod);
+    }
+
+    @Override
+    public JoinPeriodResponse updateJoinPeriod(Long id, JoinPeriodRequest joinPeriodRequest) {
+        LocalDateTime startDate = joinPeriodRequest.getStartDate();
+        LocalDateTime endDate = joinPeriodRequest.getEndDate();
+        boolean isOverlapping = joinPeriodRepository.periodExist(endDate, startDate);
+
+        if (isOverlapping) {
+            throw new IllegalArgumentException(JOIN_PERIOD_OVERLAP.getMessage());
+        }
+
+        JoinPeriod joinPeriod = joinPeriodRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.NOT_FOUND_END_POINT.getMessage()));
+        joinPeriod.updateJoinPeriod(joinPeriodRequest);
+
+        JoinPeriod updatedJoinPeriod = joinPeriodRepository.save(joinPeriod);
+        return JoinPeriodResponse.from(updatedJoinPeriod);
+    }
+
+    @Override
+    public List<JoinPeriodResponse> getAllJoinPeriods() {
+        List<JoinPeriod> joinPeriods = joinPeriodRepository.findAll();
+        return joinPeriods.stream()
+                .map(JoinPeriodResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void terminateJoinPeriod(Long id) {
+        JoinPeriod joinPeriod = joinPeriodRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.NOT_FOUND_END_POINT.getMessage()));
+
+        joinPeriod.terminateJoinPeriod();  // status 값을 false로 변경
+        joinPeriodRepository.save(joinPeriod); // 변경 사항 저장
+    }
+
+    @Override
+    public JoinPeriod checkJoinPeriod(LocalDateTime now) {
+        return joinPeriodRepository.findActiveJoinPeriod(now)
+                .orElseThrow(() -> new NoSuchElementException(JOIN_PERIOD_NOT_ACTIVE.getMessage()));
+    }
+
+    @Override
+    public int getRegisterCount(LocalDateTime now) {
+        return 0;
+    }
+
+
+    @Override
+    public void incrementPageView() {
+        PageView pageView = pageViewRepository.findById(1L).orElse(new PageView());
+        pageView.setViewCount(pageView.getViewCount() + 1);
+        pageViewRepository.save(pageView);
+    }
+
+    @Override
+    public AnalyticsResponse collectStatistics() {
+
+        Optional<JoinPeriod> joinPeriodOpt =getCurrentJoinPeriod();
+        boolean hasJoinPeriod = joinPeriodOpt.isPresent();
+        LocalDateTime startDate = hasJoinPeriod ? joinPeriodOpt.get().getStartDate() : null;
+        LocalDateTime endDate = hasJoinPeriod ? joinPeriodOpt.get().getEndDate() : null;
+
+        // 총계는 항상 가져옴
+        var memberStats = memberRepository.getMemberStatistics(startDate);
+        var appStats = hasJoinPeriod ? registerRepository.getApplicationStatistics(startDate) : null;
+        var viewStats = hasJoinPeriod ? pageViewRepository.getPageViewStatistics(startDate) : null;
+        var deactivationStats = memberRepository.getDeactivationStatistics(startDate);
+
+        // 인기 스택은 항상 조회
+        var popularStack = memberRepository.findPopularStack(startDate, endDate);
+
+        return AnalyticsResponse.from(
+                memberStats != null ? memberStats.total() : 0,
+                hasJoinPeriod ? memberStats.change() : null,
+
+                appStats != null ? appStats.total() : 0,
+                hasJoinPeriod ? appStats.change() : null,
+
+                viewStats != null ? viewStats.total() : 0,
+                hasJoinPeriod ? viewStats.change() : null,
+
+                deactivationStats != null ? deactivationStats.total() : 0,
+                hasJoinPeriod ? deactivationStats.change() : null,
+
+                popularStack.toString()
+        );
+    }
+
+
+    private Optional<JoinPeriod> getCurrentJoinPeriod() {
+        return joinPeriodRepository.findCurrentJoinPeriod(LocalDateTime.now());
+    }
+
+
+
+
+}

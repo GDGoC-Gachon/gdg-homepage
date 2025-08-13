@@ -36,6 +36,9 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     // 시큐리티
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
@@ -46,6 +49,7 @@ dependencies {
 
     // Email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     // Test 관련
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

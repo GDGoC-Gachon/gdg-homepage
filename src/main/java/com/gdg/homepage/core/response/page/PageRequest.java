@@ -1,0 +1,24 @@
+package com.gdg.homepage.core.response.page;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
+
+@Data
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
+@Slf4j
+public class PageRequest {
+    @Builder.Default
+    @Schema(description = "페이지 요청 (시작이 1)", example = "1")
+    private int page = 1;
+
+    @Builder.Default
+    @Schema(description = "요청 데이터 수", example = "10")
+    private int size = 10;
+}

@@ -23,8 +23,13 @@ services:
     networks:
       - backend-bridge
 
-volumes:
-  mysql_data:
+  redis:
+    image: redis:7.2.5
+    container_name: gdg-redis
+    ports:
+      - '6379:6379'
+    networks:
+      - backend-bridge
 
 networks:
   backend-bridge:
