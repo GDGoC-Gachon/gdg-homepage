@@ -106,11 +106,6 @@ public class RegisterService implements RegisterUseCase {
         registerRepository.delete(register);
     }
 
-    @Override
-    public long checkNowRegister(LocalDateTime now) {
-        return registerRepository.countByCurrentJoinPeriod(now);
-    }
-
     // 내부 함수
     private Register getRegisterByMemberId(Long memberId) {
         return registerRepository.findByMemberId(memberId)

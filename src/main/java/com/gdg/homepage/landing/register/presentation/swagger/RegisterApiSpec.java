@@ -4,7 +4,7 @@ import com.gdg.homepage.core.response.ApiResponse;
 import com.gdg.homepage.landing.register.application.dto.request.MemberRegisterRequest;
 import com.gdg.homepage.landing.register.application.dto.request.RegisterRequest;
 import com.gdg.homepage.landing.register.application.dto.response.RegisterResponse;
-import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
+import com.gdg.homepage.security.jwt.domain.entity.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

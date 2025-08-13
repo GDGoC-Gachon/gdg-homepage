@@ -3,7 +3,7 @@ package com.gdg.homepage.landing.register.presentation;
 import com.gdg.homepage.core.response.ApiResponse;
 import com.gdg.homepage.landing.register.application.dto.request.MemberRegisterRequest;
 import com.gdg.homepage.landing.register.presentation.swagger.RegisterApiSpec;
-import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
+import com.gdg.homepage.security.jwt.domain.entity.CustomUserDetails;
 import com.gdg.homepage.landing.register.application.dto.request.RegisterRequest;
 import com.gdg.homepage.landing.register.application.dto.response.RegisterResponse;
 import com.gdg.homepage.landing.register.application.usecase.RegisterUseCase;

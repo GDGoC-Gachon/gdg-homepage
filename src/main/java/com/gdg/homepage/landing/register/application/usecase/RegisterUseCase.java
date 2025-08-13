@@ -20,6 +20,4 @@ public interface RegisterUseCase {
     // 삭제 관련 메서드
     void deleteRegister(Long memberId);
 
-    // 현재 가입자 수 체크
-    long checkNowRegister(LocalDateTime now);
 }

@@ -7,7 +7,7 @@ import com.gdg.homepage.landing.admin.application.dto.request.MemberApprovalDeci
 import com.gdg.homepage.landing.admin.application.dto.request.MemberUpgradeRequest;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberDetailResponse;
 import com.gdg.homepage.landing.admin.application.dto.response.MemberListResponse;
-import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
+import com.gdg.homepage.security.jwt.domain.entity.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

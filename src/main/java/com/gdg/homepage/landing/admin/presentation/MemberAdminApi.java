@@ -9,10 +9,7 @@ import com.gdg.homepage.landing.admin.application.dto.response.MemberListRespons
 import com.gdg.homepage.landing.admin.application.dto.request.MemberUpgradeRequest;
 import com.gdg.homepage.landing.admin.application.usecase.MemberAdminUseCase;
 import com.gdg.homepage.landing.admin.presentation.swagger.MemberAdminApiSpec;
-import com.gdg.homepage.landing.member.presentation.swagger.MemberApiSpec;
-import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.gdg.homepage.security.jwt.domain.entity.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
