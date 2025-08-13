@@ -1,4 +1,4 @@
-package com.gdg.homepage.security.jwt.domain;
+package com.gdg.homepage.security.jwt.domain.entity;
 import com.gdg.homepage.landing.member.domain.entity.Member;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,11 +17,16 @@ public class CustomUserDetails implements UserDetails {
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(Member member) {
+    private CustomUserDetails(Member member) {
         this.id = member.getId();
         this.email = member.getEmail();
         this.password = member.getPassword();
         this.authorities = List.of(new SimpleGrantedAuthority("ROLE_" + member.getRole())); // ROLE_ 접두사 추가
+    }
+
+    /// 정적 팩토리 메서드
+    public static CustomUserDetails of(Member member) {
+        return new CustomUserDetails(member);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.gdg.homepage.security.jwt.handler;
+package com.gdg.homepage.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gdg.homepage.core.response.ApiResponse;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationDeniedHandler implements AccessDeniedHandler {
+public class AuthenticationDeniedHandler implements AccessDeniedHandler {
 
     private final ObjectMapper objectMapper;
 
