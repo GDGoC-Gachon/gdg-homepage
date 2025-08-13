@@ -43,7 +43,7 @@ public class FAQApi implements FAQApiSpec {
         FAQResponse faqResponseDto = service.updateFAQ(id,request);
 
         /// 응답
-        return ApiResponse.ok(faqResponseDto);
+        return ApiResponse.updated(faqResponseDto);
     }
 
     /**

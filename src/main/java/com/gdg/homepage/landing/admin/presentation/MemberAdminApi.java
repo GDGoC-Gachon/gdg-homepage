@@ -58,7 +58,7 @@ public class MemberAdminApi implements MemberAdminApiSpec {
     public ApiResponse<String> approveRole(@AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody @Valid MemberApprovalDecisionRequest request){
         request.setAdminId(memberDetails.getId());
         adminService.approveMember(request);
-        return ApiResponse.created("승인 되었습니다.");
+        return ApiResponse.updated("승인 되었습니다.");
     }
 
 
@@ -66,7 +66,7 @@ public class MemberAdminApi implements MemberAdminApiSpec {
     public ApiResponse<String> rejectRole(@AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody @Valid MemberApprovalDecisionRequest request){
         request.setAdminId(memberDetails.getId());
         adminService.rejectMember(request);
-        return ApiResponse.created("거절 되었습니다.");
+        return ApiResponse.updated("거절 되었습니다.");
     }
 
 
@@ -74,6 +74,6 @@ public class MemberAdminApi implements MemberAdminApiSpec {
     public ApiResponse<String> changeRole(@AuthenticationPrincipal CustomUserDetails memberDetails, @RequestBody @Valid MemberUpgradeRequest request) {
         request.setAdminId(memberDetails.getId());
         adminService.changeRole(request);
-        return ApiResponse.ok("권한 수정 성공되었습니다.");
+        return ApiResponse.updated();
     }
 }

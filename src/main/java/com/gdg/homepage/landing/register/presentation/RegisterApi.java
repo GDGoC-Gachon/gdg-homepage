@@ -36,6 +36,6 @@ public class RegisterApi implements RegisterApiSpec {
         RegisterResponse response = RegisterResponse.from(
                 service.updateRegister(customUserDetails.getId(), request));
 
-        return ApiResponse.ok(response);
+        return ApiResponse.updated(response);
     }
 }

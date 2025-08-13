@@ -27,7 +27,7 @@ public class AdminApi implements AdminApiSpec {
     @PostMapping("/joinPeriod/create")
     public ApiResponse<String> createJoinPeriod(@RequestBody @Valid JoinPeriodRequest joinPeriodRequest) {
         adminService.createJoinPeriod(joinPeriodRequest);
-        return ApiResponse.created("JoinPeriod is created.");
+        return ApiResponse.created();
     }
 
 
@@ -36,7 +36,7 @@ public class AdminApi implements AdminApiSpec {
                                                             @Valid @RequestBody JoinPeriodRequest joinPeriodRequest) {
 
         JoinPeriodResponse responseDto = adminService.updateJoinPeriod(id, joinPeriodRequest);
-        return ApiResponse.ok(responseDto);
+        return ApiResponse.updated(responseDto);
     }
 
 
@@ -50,7 +50,7 @@ public class AdminApi implements AdminApiSpec {
     @DeleteMapping("/joinPeriod/terminate/{id}")
     public ApiResponse<String> terminateJoinPeriod(@PathVariable("id") Long id) {
         adminService.terminateJoinPeriod(id);
-        return ApiResponse.ok("JoinPeriod is terminated.");
+        return ApiResponse.deleted();
     }
 
 
