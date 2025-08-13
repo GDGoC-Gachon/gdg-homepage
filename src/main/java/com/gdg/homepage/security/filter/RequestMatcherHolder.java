@@ -21,18 +21,29 @@ public class RequestMatcherHolder {
             // 공통
             new RequestInfo(OPTIONS, "/**", null),
             new RequestInfo(GET, "/", null),
-            new RequestInfo(GET, "/login", null),
-            new RequestInfo(POST, "/api/v1/auth/dev-login", null),
 
             // auth
-            new RequestInfo(POST, "/api/v1/oauth2/**", null),
-
-            // 유저 관련
-            new RequestInfo(POST, "/api/v1/auth/reissue", null),
+            new RequestInfo(POST, "/api/v1/auth/login", null),
             new RequestInfo(POST, "/api/v1/auth/logout", MemberRole.MEMBER),
+            new RequestInfo(POST, "/api/v1/auth/reissue", MemberRole.MEMBER),
 
-            // 상품 관련
-            new RequestInfo(GET, "/api/v1/products/**", null),
+            // 운영진
+            new RequestInfo(GET, "/admin/**", MemberRole.TEAM_MEMBER),
+
+            // 이메일
+            new RequestInfo(POST, "/api/v1/email/**", null),
+
+
+            // 유저
+            new RequestInfo(POST, "/api/v1/member/**", MemberRole.MEMBER),
+            new RequestInfo(GET, "/api/v1/member/**", MemberRole.MEMBER),
+            new RequestInfo(PUT, "/api/v1/member/**", MemberRole.MEMBER),
+            new RequestInfo(DELETE, "/api/v1/member/**", MemberRole.MEMBER),
+
+
+            // 신청
+            new RequestInfo(POST, "/api/v1/register/**", null),
+
 
             // static resources
             new RequestInfo(GET, "/docs/**", null),
