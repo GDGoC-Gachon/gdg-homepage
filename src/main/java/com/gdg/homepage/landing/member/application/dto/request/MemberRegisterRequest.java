@@ -1,15 +1,11 @@
 package com.gdg.homepage.landing.member.application.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 public class MemberRegisterRequest {
 
     // 가입

@@ -1,4 +1,4 @@
-package com.gdg.homepage.landing.member.application.service;
+package com.gdg.homepage.security;
 
 import com.gdg.homepage.landing.member.domain.entity.Member;
 import com.gdg.homepage.security.jwt.domain.CustomUserDetails;
