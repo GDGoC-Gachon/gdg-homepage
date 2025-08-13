@@ -22,13 +22,13 @@ public class EmailApi implements EmailApiSpec {
     private final EmailUseCase emailService;
 
 
-    @PostMapping("/email")
+    @PostMapping()
     public ApiResponse<String> email(@RequestBody EmailSendRequest request) throws MessagingException {
         emailService.sendEmail(request.getEmail());
         return ApiResponse.created("성공적으로 메일이 전송되었습니다.");
     }
 
-    @PostMapping("/email/verify")
+    @PostMapping("/verify")
     public ApiResponse<String> verify(@RequestBody EmailVerifyRequest request) {
         if (!emailService.verifyCode(request.getEmail(), request.getCode())){
             throw new NotVerifiedException("인증번호가 틀렸습니다.");
