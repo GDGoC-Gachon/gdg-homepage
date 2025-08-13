@@ -1,6 +1,7 @@
 package com.gdg.homepage.security.jwt.filter;
 
 import com.gdg.homepage.core.response.ErrorCode;
+import com.gdg.homepage.security.jwt.handler.JwtAuthenticationFailureHandler;
 import com.gdg.homepage.security.jwt.provider.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

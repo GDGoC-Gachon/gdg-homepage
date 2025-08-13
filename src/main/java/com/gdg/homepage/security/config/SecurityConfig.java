@@ -1,9 +1,9 @@
 package com.gdg.homepage.security.config;
 
-import com.gdg.homepage.security.jwt.filter.JwtAccessDeniedHandler;
-import com.gdg.homepage.security.jwt.filter.JwtAuthenticationFailureHandler;
 import com.gdg.homepage.security.jwt.filter.JwtAuthenticationFilter;
 import com.gdg.homepage.landing.member.domain.entity.MemberRole;
+import com.gdg.homepage.security.jwt.handler.JwtAuthenticationDeniedHandler;
+import com.gdg.homepage.security.jwt.handler.JwtAuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
