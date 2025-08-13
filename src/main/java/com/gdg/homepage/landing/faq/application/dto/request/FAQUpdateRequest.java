@@ -7,9 +7,13 @@ import lombok.Getter;
  * FAQ 등록/수정 요청 DTO입니다.
  * 관리자 화면 등에서 새로운 FAQ를 등록하거나,
  * 기존 FAQ를 수정할 때 사용되는 데이터 구조를 정의합니다.
+ * </p>
  */
 @Getter
-public class FAQRequest {
+public class FAQUpdateRequest {
+
+    @Schema(description = "수정할 FAQ ID", example = "1")
+    private Long id;
 
     /**
      * 자주 묻는 질문(질문 내용)

@@ -1,8 +1,8 @@
 package com.gdg.homepage.landing.faq.application.service;
 
-import com.gdg.homepage.core.response.CustomException;
 import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.faq.application.dto.request.FAQRequest;
+import com.gdg.homepage.landing.faq.application.dto.request.FAQUpdateRequest;
 import com.gdg.homepage.landing.faq.application.dto.response.FAQResponse;
 import com.gdg.homepage.landing.faq.application.usecase.FAQUseCase;
 import com.gdg.homepage.landing.faq.domain.entity.FAQ;
@@ -12,50 +12,77 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class FAQService implements FAQUseCase {
 
-    private final FAQRepository faqRepository;
+    private final FAQRepository repository;
 
-    // FAQ 생성 - FAQResponse로 반환할 것이 없다면 void 처리할 예정
+
+    /**
+     * FAQ 생성
+     * @param faqRequest        요청 DTO
+     */
     public FAQResponse createFAQ(FAQRequest faqRequest) {
-        FAQ faq = FAQ.builder()
-                .question(faqRequest.getQuestion())
-                .answer(faqRequest.getAnswer())
-                .build();
-        FAQ savedFaq = faqRepository.save(faq);
-        return FAQResponse.from(savedFaq.getId(), savedFaq.getQuestion(), savedFaq.getAnswer());
+
+        /// 객체 생성
+        FAQ faq = FAQ.of(faqRequest.getQuestion(), faqRequest.getAnswer());
+
+        /// DB 저장
+        FAQ savedFaq = repository.save(faq);
+
+        /// DTO 변환
+        return FAQResponse.from(savedFaq);
     }
 
-    // FAQ 수정 - 반환할게 없다면 void 처리/ 수정 요청값을 무조건 넣어
-    public FAQResponse updateFAQ(Long id, FAQRequest faqRequest) {
-        FAQ faq = faqRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_END_POINT));
-        // 요청 값이 존재하면 수정
-        if(faqRequest.getQuestion()!=null) {
-            faq.updateQuestion(faqRequest.getQuestion());
+    /**
+     * FAQ 수정
+     * @param request    수정 DTO
+     */
+    public FAQResponse updateFAQ(FAQUpdateRequest request) {
+
+        /// DB 조회
+        FAQ faq = repository.findById(request.getId())
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.NOT_FOUND_END_POINT.getMessage()));
+
+        /// 요청 값이 존재하면 수정
+        if(request.getQuestion()!=null) {
+            faq.updateQuestion(request.getQuestion());
         }
-        if(faqRequest.getAnswer()!=null){
-            faq.updateAnswer(faqRequest.getAnswer());
+        if(request.getAnswer()!=null){
+            faq.updateAnswer(request.getAnswer());
         }
-        FAQ updatedFaq = faqRepository.save(faq);
-        return FAQResponse.from(updatedFaq.getId(), updatedFaq.getQuestion(), updatedFaq.getAnswer());
+
+        /// 저장
+        FAQ updateFAQ = repository.save(faq);
+
+        /// DTO 변환
+        return FAQResponse.from(updateFAQ);
     }
 
-    // FAQ 삭제
+    /**
+     * FAQ 삭제
+     * @param id    삭제할 ID
+     */
     public void deleteFAQ(Long id) {
-        FAQ faq = faqRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_END_POINT));
-        faqRepository.delete(faq);
+
+        repository.deleteById(id);
     }
 
-    // FAQ 목록 조회
+
+    /**
+     * FAQ 목록 조회
+     * @return
+     */
     public List<FAQResponse> getAllFAQs() {
-        List<FAQ> faqs = faqRepository.findAll();
-        return faqs.stream()
-                .map(faq -> FAQResponse.from(faq.getId(), faq.getQuestion(), faq.getAnswer()))
-                .collect(Collectors.toList());
+
+        /// DB 호출
+        List<FAQ> faqs = repository.findAll();
+
+        /// 리턴
+        return FAQResponse.from(faqs);
     }
 }

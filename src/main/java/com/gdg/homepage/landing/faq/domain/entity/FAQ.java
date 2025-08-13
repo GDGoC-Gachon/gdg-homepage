@@ -2,6 +2,7 @@ package com.gdg.homepage.landing.faq.domain.entity;
 
 import com.gdg.homepage.landing.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 @EntityListeners(AuditingEntityListener.class)
 public class FAQ extends BaseTimeEntity {
 
@@ -21,10 +24,12 @@ public class FAQ extends BaseTimeEntity {
 
     private String answer;
 
-    @Builder
-    public FAQ(String question, String answer) {
-        this.question = question;
-        this.answer = answer;
+    /// 정적 팩토리 메서드
+    public static FAQ of(String question, String answer) {
+        return FAQ.builder()
+                .question(question)
+                .answer(answer)
+                .build();
     }
 
     // 질문 수정 메소드

@@ -1,21 +1,29 @@
 package com.gdg.homepage.landing.faq.application.dto.response;
 
+import com.gdg.homepage.landing.faq.domain.entity.FAQ;
 import lombok.Builder;
-import lombok.Getter;
+import java.util.List;
 
 @Builder
-@Getter
-public class FAQResponse {
-    private Long id;
-    private String question;
-    private String answer;
+public record FAQResponse(
+        Long id,
+        String question,
+        String answer
+) {
 
-    @Builder
-    public static FAQResponse from(Long id, String question, String answer) {
+    /// 정적 팩토리 메서드
+    public static FAQResponse from(FAQ faq) {
         return FAQResponse.builder()
-                .id(id)
-                .question(question)
-                .answer(answer)
+                .id(faq.getId())
+                .question(faq.getQuestion())
+                .answer(faq.getAnswer())
                 .build();
+    }
+
+    /// 정적 팩토리 메서드
+    public static List<FAQResponse> from(List<FAQ> faqs) {
+        return faqs.stream()
+                .map(FAQResponse::from)
+                .toList();
     }
 }

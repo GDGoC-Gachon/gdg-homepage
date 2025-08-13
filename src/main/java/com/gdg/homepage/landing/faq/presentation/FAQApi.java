@@ -1,81 +1,75 @@
 package com.gdg.homepage.landing.faq.presentation;
 
 import com.gdg.homepage.core.response.ApiResponse;
-import com.gdg.homepage.core.response.CustomException;
-import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.faq.application.dto.request.FAQRequest;
+import com.gdg.homepage.landing.faq.application.dto.request.FAQUpdateRequest;
 import com.gdg.homepage.landing.faq.application.dto.response.FAQResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.gdg.homepage.landing.faq.application.usecase.FAQUseCase;
+import com.gdg.homepage.landing.faq.presentation.swagger.FAQApiSpec;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(
-        name = "FAQ 관리 API",
-        description = "관리자용 FAQ 생성, 수정, 삭제 및 조회 기능"
-)
+
 @RestController
 @RequestMapping("/admin/faq")
 @RequiredArgsConstructor
-public class FAQApi {
+public class FAQApi implements FAQApiSpec {
 
-    private final com.gdg.homepage.landing.faq.application.service.FAQService FAQService;
+    private final FAQUseCase service;
 
-    @Operation(
-            summary = "FAQ 생성",
-            description = "새로운 FAQ 항목을 생성합니다."
-    )
+    /**
+     * 생성
+     */
     @PostMapping("/create")
-    public ApiResponse<FAQResponse> createFAQ(@RequestBody FAQRequest faqRequest) {
-        try {
-            FAQResponse faqResponseDto = FAQService.createFAQ(faqRequest);
-            return ApiResponse.created(faqResponseDto);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+    public ApiResponse<Void> createFAQ(@RequestBody @Valid FAQRequest faqRequest) {
+
+        /// 서비스 호출
+        service.createFAQ(faqRequest);
+
+        /// 응답
+        return ApiResponse.created();
     }
 
-    @Operation(
-            summary = "FAQ 수정",
-            description = "기존 FAQ 항목을 ID를 기반으로 수정합니다."
-    )
-    @PutMapping("/update/{id}")
-    public ApiResponse<FAQResponse> updateFAQ(@PathVariable("id") Long id, @RequestBody FAQRequest faqRequest) {
-        try {
-            FAQResponse faqResponseDto = FAQService.updateFAQ(id, faqRequest);
-            return ApiResponse.ok(faqResponseDto);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+
+    /**
+     * 수정
+     */
+    @PutMapping("/{id}")
+    public ApiResponse<FAQResponse> updateFAQ(@RequestBody @Valid FAQUpdateRequest request) {
+
+        /// 서비스 호출
+        FAQResponse faqResponseDto = service.updateFAQ(request);
+
+        /// 응답
+        return ApiResponse.ok(faqResponseDto);
     }
 
-    @Operation(
-            summary = "FAQ 삭제",
-            description = "FAQ 항목을 ID를 기반으로 삭제합니다."
-    )
-    @DeleteMapping("/delete/{id}")
-    public ApiResponse<String> deleteFAQ(@PathVariable("id") Long id) {
-        try {
-            FAQService.deleteFAQ(id);
-            return ApiResponse.ok("FAQ is deleted.");
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Operation(
-            summary = "FAQ 전체 조회",
-            description = "모든 FAQ 항목을 조회합니다."
-    )
+    /**
+     * 조회
+     */
     @GetMapping("/all")
     public ApiResponse<List<FAQResponse>> getAllFAQs() {
-        try {
-            List<FAQResponse> faqResponseDtos = FAQService.getAllFAQs();
-            return ApiResponse.ok(faqResponseDtos);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+
+        /// 서비스 호출
+        List<FAQResponse> responses = service.getAllFAQs();
+
+        /// 응답
+        return ApiResponse.ok(responses);
+    }
+
+    /**
+     * 삭제
+     */
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> deleteFAQ(@PathVariable("id") Long id) {
+
+        /// 서비스 호출
+        service.deleteFAQ(id);
+
+        /// 응답
+        return ApiResponse.deleted();
     }
 }

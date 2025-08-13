@@ -29,12 +29,8 @@ public class AdminApi {
     )
     @PostMapping("/joinPeriod/create")
     public ApiResponse<String> createJoinPeriod(@RequestBody @Valid JoinPeriodRequest joinPeriodRequest) {
-        try {
-            adminService.createJoinPeriod(joinPeriodRequest);
-            return ApiResponse.created("JoinPeriod is created.");
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        adminService.createJoinPeriod(joinPeriodRequest);
+        return ApiResponse.created("JoinPeriod is created.");
     }
 
     @Operation(
@@ -43,12 +39,8 @@ public class AdminApi {
     )
     @PutMapping("/joinPeriod/update/{id}")
     public ApiResponse<JoinPeriodResponse> updateJoinPeriod(@PathVariable("id") Long id,@Valid @RequestBody JoinPeriodRequest joinPeriodRequest) {
-        try {
-            JoinPeriodResponse responseDto = adminService.updateJoinPeriod(id, joinPeriodRequest);
-            return ApiResponse.ok(responseDto);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        JoinPeriodResponse responseDto = adminService.updateJoinPeriod(id, joinPeriodRequest);
+        return ApiResponse.ok(responseDto);
     }
 
     @Operation(
@@ -57,12 +49,8 @@ public class AdminApi {
     )
     @GetMapping("/joinPeriod/all")
     public ApiResponse<List<JoinPeriodResponse>> getAllJoinPeriods() {
-        try {
-            List<JoinPeriodResponse> responseDtos = adminService.getAllJoinPeriods();
-            return ApiResponse.ok(responseDtos);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        List<JoinPeriodResponse> responseDtos = adminService.getAllJoinPeriods();
+        return ApiResponse.ok(responseDtos);
     }
 
     @Operation(
@@ -71,12 +59,8 @@ public class AdminApi {
     )
     @DeleteMapping("/joinPeriod/terminate/{id}")
     public ApiResponse<String> terminateJoinPeriod(@PathVariable("id") Long id) {
-        try {
-            adminService.terminateJoinPeriod(id);
-            return ApiResponse.ok("JoinPeriod is terminated.");
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        adminService.terminateJoinPeriod(id);
+        return ApiResponse.ok("JoinPeriod is terminated.");
     }
 
     @Operation(

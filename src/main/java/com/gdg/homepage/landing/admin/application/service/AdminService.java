@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,8 @@ public class AdminService implements AdminUseCase {
             throw new IllegalArgumentException("해당 기간은 이미 존재하는 가입 기간과 겹칩니다.");
         }
 
-        JoinPeriod joinPeriod = joinPeriodRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_END_POINT));
+        JoinPeriod joinPeriod = joinPeriodRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.NOT_FOUND_END_POINT.getMessage()));
         joinPeriod.updateJoinPeriod(joinPeriodRequest);
 
         JoinPeriod updatedJoinPeriod = joinPeriodRepository.save(joinPeriod);
@@ -85,7 +87,7 @@ public class AdminService implements AdminUseCase {
     @Override
     public void terminateJoinPeriod(Long id) {
         JoinPeriod joinPeriod = joinPeriodRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_END_POINT));
+                .orElseThrow(() -> new NoSuchElementException(ErrorCode.NOT_FOUND_END_POINT.getMessage()));
 
         joinPeriod.terminateJoinPeriod();  // status 값을 false로 변경
         joinPeriodRepository.save(joinPeriod); // 변경 사항 저장
