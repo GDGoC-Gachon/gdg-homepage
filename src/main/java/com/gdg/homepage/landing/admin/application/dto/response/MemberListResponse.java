@@ -16,7 +16,7 @@ public class MemberListResponse {
     private Long memberId;
     private String email;
     private String name;
-    private int grade;
+    private String grade;
     private String studentId;
     private String phoneNumber;
     private MemberRole role;
@@ -38,7 +38,7 @@ public class MemberListResponse {
                 .memberId(member.getId())
                 .email(member.getEmail())
                 .name(member.getName())
-                .grade(snippet.getGrade().getValue())
+                .grade(snippet.getGrade().getLabel())
                 .studentId(snippet.getStudentId())
                 .phoneNumber(member.getPhoneNumber())
                 .role(role)

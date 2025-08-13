@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -59,7 +60,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-            IllegalStateException.class, IllegalArgumentException.class})
+            IllegalStateException.class, IllegalArgumentException.class, BadCredentialsException.class})
     public ApiResponse<CustomException> handleIllegalStateException(Exception e, HttpServletRequest request) {
 
         /// 메세지 바탕으로 예외 코드 검색
