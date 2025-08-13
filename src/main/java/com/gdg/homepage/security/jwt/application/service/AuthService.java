@@ -53,8 +53,12 @@ public class AuthService implements AuthUseCase {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        /// 토큰 발급
+        /// 액세스 토큰 발급
         tokenService.createAccessToken(httpServletResponse, authentication);
+
+        /// 리프레쉬 토큰 발급
+        tokenService.createRefreshToken(httpServletResponse, authentication);
+
     }
 
     @Override
@@ -71,6 +75,13 @@ public class AuthService implements AuthUseCase {
 
     @Override
     public void reissueRefreshToken(Long userId, HttpServletRequest request, HttpServletResponse response) {
+
+        /// 유저 예외 처리
+        Member member = getMember(userId);
+
+        /// 리프레쉬 토큰 사용
+        tokenService.reissueByRefreshToken(request, response);
+
 
     }
 
