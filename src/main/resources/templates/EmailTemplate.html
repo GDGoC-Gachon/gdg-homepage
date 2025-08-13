@@ -13,9 +13,10 @@
         GDGoC 회원가입을 위한 인증 코드입니다.<br>
         아래의 코드를 입력하여 이메일 인증을 완료하세요.
     </p>
-    <div style="font-size:28px; font-weight:bold; background:#f4f4f4; padding:15px 25px; display:inline-block; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); margin-bottom:30px;">
-        ${code}
+    <div style="font-size:28px; font-weight:bold; background:#f4f4f4; padding:15px 25px; display:inline-block; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); margin-bottom:30px;"
+         th:text="${code}">
     </div>
+
     <p style="margin-bottom:15px;">GDGoC와 함께 성장하는 개발자가 되어보세요!</p>
     <p style="color:#666; font-size:12px;">Google Developer Groups of Gachon</p>
 
