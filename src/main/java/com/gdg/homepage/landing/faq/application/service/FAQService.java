@@ -2,7 +2,6 @@ package com.gdg.homepage.landing.faq.application.service;
 
 import com.gdg.homepage.core.response.ErrorCode;
 import com.gdg.homepage.landing.faq.application.dto.request.FAQRequest;
-import com.gdg.homepage.landing.faq.application.dto.request.FAQUpdateRequest;
 import com.gdg.homepage.landing.faq.application.dto.response.FAQResponse;
 import com.gdg.homepage.landing.faq.application.usecase.FAQUseCase;
 import com.gdg.homepage.landing.faq.domain.entity.FAQ;
@@ -40,19 +39,20 @@ public class FAQService implements FAQUseCase {
 
     /**
      * FAQ 수정
-     * @param request    수정 DTO
+     *
+     * @param request 수정 DTO
      */
-    public FAQResponse updateFAQ(FAQUpdateRequest request) {
+    public FAQResponse updateFAQ(Long id, FAQRequest request) {
 
         /// DB 조회
-        FAQ faq = repository.findById(request.getId())
+        FAQ faq = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException(ErrorCode.NOT_FOUND_END_POINT.getMessage()));
 
         /// 요청 값이 존재하면 수정
-        if(request.getQuestion()!=null) {
+        if (request.getQuestion() != null) {
             faq.updateQuestion(request.getQuestion());
         }
-        if(request.getAnswer()!=null){
+        if (request.getAnswer() != null) {
             faq.updateAnswer(request.getAnswer());
         }
 

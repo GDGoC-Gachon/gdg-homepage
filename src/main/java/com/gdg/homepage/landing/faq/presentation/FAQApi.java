@@ -2,7 +2,6 @@ package com.gdg.homepage.landing.faq.presentation;
 
 import com.gdg.homepage.core.response.ApiResponse;
 import com.gdg.homepage.landing.faq.application.dto.request.FAQRequest;
-import com.gdg.homepage.landing.faq.application.dto.request.FAQUpdateRequest;
 import com.gdg.homepage.landing.faq.application.dto.response.FAQResponse;
 import com.gdg.homepage.landing.faq.application.usecase.FAQUseCase;
 import com.gdg.homepage.landing.faq.presentation.swagger.FAQApiSpec;
@@ -38,10 +37,10 @@ public class FAQApi implements FAQApiSpec {
      * 수정
      */
     @PutMapping("/{id}")
-    public ApiResponse<FAQResponse> updateFAQ(@RequestBody @Valid FAQUpdateRequest request) {
+    public ApiResponse<FAQResponse> updateFAQ(@PathVariable Long id, @RequestBody @Valid FAQRequest request) {
 
         /// 서비스 호출
-        FAQResponse faqResponseDto = service.updateFAQ(request);
+        FAQResponse faqResponseDto = service.updateFAQ(id,request);
 
         /// 응답
         return ApiResponse.ok(faqResponseDto);

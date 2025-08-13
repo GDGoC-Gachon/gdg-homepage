@@ -1,7 +1,6 @@
 package com.gdg.homepage.landing.faq.application.usecase;
 
 import com.gdg.homepage.landing.faq.application.dto.request.FAQRequest;
-import com.gdg.homepage.landing.faq.application.dto.request.FAQUpdateRequest;
 import com.gdg.homepage.landing.faq.application.dto.response.FAQResponse;
 import java.util.List;
 
@@ -24,11 +23,11 @@ public interface FAQUseCase {
 
     /**
      * FAQ 정보를 수정합니다.
-     *
+     * @param id    수정할 ID
      * @param request FAQ 수정 요청 DTO
      * @return 수정된 FAQ 정보 응답 DTO
      */
-    FAQResponse updateFAQ(FAQUpdateRequest request);
+    FAQResponse updateFAQ(Long id, FAQRequest request);
 
     /**
      * FAQ를 삭제합니다.
