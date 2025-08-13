@@ -61,6 +61,8 @@ public class RequestMatcherHolder {
             new RequestInfo(GET, "/*.ico", null),
             new RequestInfo(GET, "/resources/**", null),
             new RequestInfo(GET, "/index.html", null),
+            new RequestInfo(GET, "/EmailTemplate.html", null),
+            new RequestInfo(GET, "/PasswordResetTemplate.html", null),
             new RequestInfo(GET, "/error", null),
             new RequestInfo(GET, "/gdg.png", null),
 

@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ThreadLocalRandom;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Slf4j
 @Service
@@ -28,46 +30,36 @@ public class EmailService implements EmailUseCase {
     private final JavaMailSender emailSender;
     private final VerificationCodeRepository emailRepository;
 
+    private final TemplateEngine templateEngine;
+
     @Value("${cors.front.dev}")
     private String front;
 
     @Override
     public void sendEmail(String toEmail) throws MessagingException {
+        String code = createVerificationCode(toEmail);
+
+        // 1. 템플릿 변수 세팅
+        Context context = new Context();
+        context.setVariable("code", code);
+
+        // 2. HTML 템플릿 렌더링
+        String content = templateEngine.process("EmailTemplate", context);
+
+        // 3. 메일 전송
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        // 기초 세팅
-        String title = "GDGoC Gachon 이메일 인증 번호";
-        String code = createVerificationCode(toEmail); // 인증 코드 생성
-
-        // 설정
         helper.setTo(toEmail);
-        helper.setSubject(title);
-
-        // 이메일 본문
-        String content = """
-        <html>
-        <body style="font-family: Arial, sans-serif; text-align: center;">
-            <h1 style="color: #4285F4;">Google Developer Groups on Campus Gachon University</h1>
-            <h2 style="color: #4CAF50;">이메일 인증 코드</h2>
-            <p>GDGoC 회원가입을 위한 인증 코드입니다. 아래의 코드를 입력하여 이메일 인증을 완료하세요.</p>
-            <div style="font-size: 24px; font-weight: bold; background: #f4f4f4; padding: 10px; display: inline-block; border-radius: 5px;">
-                %s
-            </div>
-            <p style="margin-top: 20px;">GDGoC와 함께 성장하는 개발자가 되어보세요!</p>
-            <p style="color: #666; font-size: 12px;">Google Developer Groups of Gachon</p>
-        </body>
-        </html>
-    """.formatted(code); // 코드 삽입
-
+        helper.setSubject("GDGoC Gachon 이메일 인증 번호");
         helper.setText(content, true);
 
         try {
             emailSender.send(message);
         } catch (RuntimeException e) {
-            e.printStackTrace();
             throw new MessagingException(ErrorCode.EMAIL_SEND_FAILED.getMessage(), e);
         }
+
     }
 
 
@@ -113,41 +105,27 @@ public class EmailService implements EmailUseCase {
     }
 
     ///  패스워드 초기화 메일 전송하기
-    @Override
-    public void sendPasswordResetEmail(String email,String token) throws MessagingException {
+    public void sendPasswordResetEmail(String email, String token) throws MessagingException {
+        String resetLink = front + "/reset-password?token=" + token;
+
+        // 1. 템플릿 변수 세팅
+        Context context = new Context();
+        context.setVariable("resetLink", resetLink);
+
+        // 2. HTML 템플릿 렌더링
+        String content = templateEngine.process("PasswordResetTemplate", context);
+
+        // 3. 메일 전송
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        // 기초 세팅
-        String title = "GDGoC Gachon 비밀번호 변경 링크";
-        String resetLink = front+"/reset-password?token=" + token;
-
-        // 설정
         helper.setTo(email);
-        helper.setSubject(title);
-
-        // 이메일 본문
-        String content = """
-    <html>
-    <body style="font-family: Arial, sans-serif; text-align: center;">
-        <h1 style="color: #4285F4;">Google Developer Groups on Campus Gachon University</h1>
-        <h2 style="color: #4CAF50;">이메일 인증 코드</h2>
-        <p>비밀번호 변경 링크입니다. 비밀번호 변경하기 버튼을 눌러 비밀번호를 변경해주세요..</p>
-        <div style="font-size: 24px; font-weight: bold; background: #f4f4f4; padding: 10px; display: inline-block; border-radius: 5px;">
-            %s
-        </div>
-        <p style="margin-top: 20px;">본 메일은 법령에 따른 통지 및 고지 의무사항으로 수신 동의 여부와 상관 없이 발송됩니다.</p>
-        <p style="color: #666; font-size: 12px;">Google Developer Groups of Gachon</p>
-    </body>
-    </html>
-""".formatted(resetLink); // 코드 삽입
-
+        helper.setSubject("GDGoC Gachon 비밀번호 변경 링크");
         helper.setText(content, true);
 
         try {
             emailSender.send(message);
         } catch (RuntimeException e) {
-            e.printStackTrace();
             throw new MessagingException(ErrorCode.EMAIL_SEND_FAILED.getMessage(), e);
         }
     }

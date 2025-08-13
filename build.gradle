@@ -49,6 +49,7 @@ dependencies {
 
     // Email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     // Test 관련
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
