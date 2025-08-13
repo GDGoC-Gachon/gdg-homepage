@@ -1,0 +1,41 @@
+package com.gdg.homepage.landing.email.presentation;
+
+
+import com.gdg.homepage.core.response.ApiResponse;
+import com.gdg.homepage.landing.email.application.dto.request.EmailSendRequest;
+import com.gdg.homepage.landing.email.application.dto.request.EmailVerifyRequest;
+import com.gdg.homepage.landing.email.application.usecase.EmailUseCase;
+import com.gdg.homepage.landing.email.exception.NotVerifiedException;
+import com.gdg.homepage.landing.email.presentation.swagger.EmailApiSpec;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.mail.MessagingException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/email")
+@RequiredArgsConstructor
+public class EmailApi implements EmailApiSpec {
+
+    private final EmailUseCase emailService;
+
+
+    @PostMapping("/email")
+    public ApiResponse<String> email(@RequestBody EmailSendRequest request) throws MessagingException {
+        emailService.sendEmail(request.getEmail());
+        return ApiResponse.created("성공적으로 메일이 전송되었습니다.");
+    }
+
+    @PostMapping("/email/verify")
+    public ApiResponse<String> verify(@RequestBody EmailVerifyRequest request) {
+        if (!emailService.verifyCode(request.getEmail(), request.getCode())){
+            throw new NotVerifiedException("인증번호가 틀렸습니다.");
+        }
+        return ApiResponse.created("메일이 인증되었습니다.");
+    }
+
+
+}

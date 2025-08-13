@@ -1,7 +1,7 @@
-package com.gdg.homepage.landing.member.application.service;
+package com.gdg.homepage.landing.email.application.service;
 
-import com.gdg.homepage.landing.member.application.usecase.EmailUseCase;
-import com.gdg.homepage.landing.member.application.exception.NotVerifiedException;
+import com.gdg.homepage.landing.email.application.usecase.EmailUseCase;
+import com.gdg.homepage.landing.email.exception.NotVerifiedException;
 import com.gdg.homepage.landing.member.domain.entity.VerificationCode;
 import com.gdg.homepage.landing.member.domain.repository.EmailRepository;
 import jakarta.mail.MessagingException;

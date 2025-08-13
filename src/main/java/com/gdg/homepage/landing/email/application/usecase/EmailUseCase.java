@@ -1,4 +1,4 @@
-package com.gdg.homepage.landing.member.application.usecase;
+package com.gdg.homepage.landing.email.application.usecase;
 
 import jakarta.mail.MessagingException;
 
