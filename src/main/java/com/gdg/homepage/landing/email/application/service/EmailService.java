@@ -10,6 +10,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -53,6 +54,10 @@ public class EmailService implements EmailUseCase {
         helper.setTo(toEmail);
         helper.setSubject("GDGoC Gachon 이메일 인증 번호");
         helper.setText(content, true);
+
+        // 4. CID 이미지 첨부
+        ClassPathResource gdgLogo = new ClassPathResource("static/gdg.png");
+        helper.addInline("gdgLogo", gdgLogo);
 
         try {
             emailSender.send(message);
@@ -122,6 +127,11 @@ public class EmailService implements EmailUseCase {
         helper.setTo(email);
         helper.setSubject("GDGoC Gachon 비밀번호 변경 링크");
         helper.setText(content, true);
+
+        // 4. CID 이미지 첨부
+        ClassPathResource gdgLogo = new ClassPathResource("static/gdg.png");
+        helper.addInline("gdgLogo", gdgLogo);
+
 
         try {
             emailSender.send(message);
