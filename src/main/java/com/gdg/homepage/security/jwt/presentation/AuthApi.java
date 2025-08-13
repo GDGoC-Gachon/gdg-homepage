@@ -42,7 +42,7 @@ public class AuthApi implements AuthApiSpec {
         service.logout(customUserDetails.getId(), request, response);
 
         /// 리턴
-        return ApiResponse.ok("성공적으로 로그아웃 되었습니다.");
+        return ApiResponse.created();
     }
 
 
@@ -55,6 +55,6 @@ public class AuthApi implements AuthApiSpec {
         service.reissueRefreshToken(customUserDetails.getId(), request, response);
 
         /// 재발급 하기
-        return ApiResponse.ok("성공적으로 재발급되었습니다.");
+        return ApiResponse.created();
     }
 }

@@ -29,6 +29,9 @@ public class RequestMatcherHolder {
 
             // 운영진
             new RequestInfo(GET, "/admin/**", MemberRole.TEAM_MEMBER),
+            new RequestInfo(POST, "/admin/**", MemberRole.TEAM_MEMBER),
+            new RequestInfo(DELETE, "/admin/**", MemberRole.TEAM_MEMBER),
+            new RequestInfo(PUT, "/admin/**", MemberRole.TEAM_MEMBER),
 
             // 이메일
             new RequestInfo(POST, "/api/v1/email/**", null),
@@ -43,6 +46,14 @@ public class RequestMatcherHolder {
 
             // 신청
             new RequestInfo(POST, "/api/v1/register/**", null),
+
+            // faq
+            new RequestInfo(POST, "/api/v1/faq/**", null),
+            new RequestInfo(GET, "/api/v1/faq/**", null),
+            new RequestInfo(DELETE, "/api/v1/faq/**", null),
+            new RequestInfo(PUT, "/api/v1/faq/**", null),
+
+
 
 
             // static resources
